@@ -10,6 +10,8 @@ test :: Effect Unit
 test = do
   log $ show (head Nil :: Maybe Unit)
   log $ show $ head ("abc" : "123" : Nil)
+  log $ show (tail Nil :: Maybe (List Unit) )
+  log $ show $ tail ("abc" : "123" : Nil)
   log "🍝"
 
 flip :: ∀ a b c. (a -> b -> c) -> b -> a -> c
@@ -66,6 +68,15 @@ lengthTail acc (_ : xs) = lengthTail (acc + 1) xs
 head :: ∀ a. List a -> Maybe a
 head Nil = Nothing
 head (x : _) = Just x
+
+-- 5.17 --
+tail :: ∀ a. List a -> Maybe (List a)
+tail Nil = Nothing
+tail (_ : xs) = Just xs
+
+tail' :: ∀ a. List a -> List a
+tail' Nil = Nil
+tail' (_ : xs) = xs
 
 -- ----------------
 flip' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
