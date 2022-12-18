@@ -4,12 +4,15 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude ( Unit, discard, otherwise, show, negate
-               , (+), (-), (<), (==))
+import Prelude (Unit, discard, negate, otherwise, show, (+), (-), (==), (/=), (<), (>=))
 
 test :: Effect Unit
 test = do
-  log $ show $ (1 : 2 : 3 : Nil) !! 1
+  log $ show $ index (1 : 2 : 3 : Nil) (-99)
+  log "🍝"
+  log $ show $ findIndex (_ >= 2) (1 : 2 : 3 : Nil)
+  log $ show $ findIndex (_ >= 99) (1 : 2 : 3 : Nil)
+  log $ show $ findIndex (10 /= _) (Nil :: List Int)
   log "🍝"
 
 -- 5.4 --
@@ -143,3 +146,12 @@ indexB  l i = go l i where
                  | otherwise = go xs (ci - 1)
 -- 5.22 --
 infixl 8 index as !!
+
+-- 5.23 --
+findIndex :: ∀ a. (a -> Boolean) -> List a -> Maybe Int
+findIndex p l = go 0 l where
+  go :: Int -> List a -> Maybe Int
+  go _ Nil = Nothing
+  -- go i (x : xs) = if p x then Just i else go (i + 1) xs
+  go i (x : xs) | p x = Just i
+                | otherwise = go (i + 1) xs
