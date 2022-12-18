@@ -51,6 +51,17 @@ length :: ∀ a. List a -> Int
 length Nil = 0
 length (_ : xs) = 1 + length xs
 
+-- 5.15 --
+length' :: ∀ a. List a -> Int
+length' l = go 0 l where
+  go :: Int -> List a -> Int
+  go acc Nil      = acc
+  go acc (_ : xs) = go (acc + 1) xs
+
+lengthTail :: ∀ a. Int -> List a -> Int
+lengthTail acc Nil = acc
+lengthTail acc (_ : xs) = lengthTail (acc + 1) xs
+
 -- ----------------
 flip' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
 flip' f = \b a -> f a b
