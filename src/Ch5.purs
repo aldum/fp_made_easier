@@ -13,7 +13,8 @@ test = do
   flip const 1 2 # show # log
   -- log $ show (flip' const 1 2)
   -- log $ show (flip'' const 1 2)
-  log "test 🍝"
+  log $ show $ singleton "xyz"
+  log "🍝"
 
 flip :: ∀ a b c. (a -> b -> c) -> b -> a -> c
 flip f a b = f b a
@@ -35,9 +36,11 @@ applyFlipped' = flip apply
 -- infixl 0 applyFlipped as #
 infixl 1 applyFlipped as #
 
+-- 5.11 --
+singleton :: ∀ a. a -> List a
+singleton a = a : Nil
 
 -- ----------------
-
 flip' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
 flip' f = \b a -> f a b
 
