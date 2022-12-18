@@ -8,10 +8,15 @@ import Prelude (Unit, discard, show, (+), (==))
 
 test :: Effect Unit
 test = do
-  log $ show $ (last Nil :: Maybe Unit)
-  log $ show $ last $ "a" : "b" : "c" : Nil
-  log $ show $ (last' Nil :: Maybe Unit)
-  log $ show $ last' $ "a" : "b" : "c" : Nil
+  log $ show $ init (Nil :: List Unit)
+  log $ show $ init $ 1 : Nil
+  log $ show $ init $ 1 : 2 : Nil
+  log $ show $ init $ 1 : 2 : 3 : Nil
+
+  log $ show $ init' (Nil :: List Unit)
+  log $ show $ init' $ 1 : Nil
+  log $ show $ init' $ 1 : 2 : Nil
+  log $ show $ init' $ 1 : 2 : 3 : Nil
   log "🍝"
 
 -- 5.4 --
@@ -108,3 +113,19 @@ last' Nil                       = Nothing
 last' (_ : xs) | length xs == 1 = head xs
 last' (_ : xs)                  = last xs
 
+-- 5.19 --
+init :: ∀ a. List a -> Maybe (List a)
+init Nil  = Nothing
+init l    = go Nil l where
+  go :: List a -> List a -> Maybe (List a)
+  go _ Nil         = Nothing
+  go acc (_ : Nil) = Just acc
+  go acc (y : ys)  = go (snoc acc y) ys
+
+init' :: ∀ a. List a -> Maybe (List a)
+init' Nil  = Nothing
+init' l    = Just $ go l where
+  go :: List a -> List a
+  go Nil = Nil
+  go (_ : Nil) = Nil
+  go (y : ys)  = y : go ys
