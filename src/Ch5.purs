@@ -4,14 +4,11 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, discard, otherwise, show, (+), (-), (<), (==))
+import Prelude (type (~>), Unit, discard, otherwise, show, (+), (-), (<), (>), (==))
 
 test :: Effect Unit
 test = do
-  log $ show $ concat2 (1 : 2 : 3 : Nil) (4 : 5 : Nil)
-  log $ show $ concat ((1 : 2 : 3 : Nil) : (4 : 5 : Nil) : (10 : 11 : Nil) : Nil)
-
-  log $ show $ concat' ((1 : 2 : 3 : Nil) : (4 : 5 : Nil) : (10 : 11 : Nil) : Nil)
+  log $ show $ filter (4 > _) $ (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (1 : 2 : 3 : Nil)
   log "🍝"
 
 -- 5.4 --
@@ -197,3 +194,10 @@ concat' Nil = Nil
 concat' (l : Nil) = l
 concat' (Nil : ls) = concat (ls)
 concat' ((x : xs) : ls) = x : concat (xs : ls)
+
+-- 5.28 --
+filter :: ∀ a. (a -> Boolean) -> List a -> List a
+filter p l = go l where
+  go Nil                  = Nil
+  go (x : xs) | p x       = x : go xs
+              | otherwise = go xs
