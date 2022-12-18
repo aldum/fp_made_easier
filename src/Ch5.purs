@@ -4,11 +4,13 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, discard, otherwise, show, (+), (-), (<), (>), (==))
+import Prelude (type (~>), Unit, discard, otherwise, show, (+), (-), (<), (<<<), (==), (>))
+import Undefined (undefined)
 
 test :: Effect Unit
 test = do
   log $ show $ filter (4 > _) $ (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (1 : 2 : 3 : Nil)
+  log $ show $ filterTail (4 > _) $ (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (1 : 2 : 3 : Nil)
   log "🍝"
 
 -- 5.4 --
@@ -201,3 +203,16 @@ filter p l = go l where
   go Nil                  = Nil
   go (x : xs) | p x       = x : go xs
               | otherwise = go xs
+
+-- 5.29 --
+filterTail :: ∀ a. (a -> Boolean) -> List a -> List a
+-- filterTail p l = go Nil l where
+filterTail p = go Nil where
+  go :: List a -> List a -> List a
+  go acc Nil = reverse acc
+  go acc (x : xs) = if p x then go (x: acc) xs else go acc xs
+
+filterTail' :: ∀ a. (a -> Boolean) -> List a -> List a
+filterTail' p = reverse <<< go Nil where
+  go nl Nil = nl
+  go nl (x : xs) = if p x then go (x : nl) xs else go nl xs
