@@ -9,10 +9,7 @@ import Prelude ( Unit, discard, otherwise, show, negate
 
 test :: Effect Unit
 test = do
-  log $ show $ index (1 : Nil) 4
-  log $ show $ index (1 : 2 : 3 : Nil) 1
-  log $ show $ index (Nil :: List Unit) 0
-  log $ show $ index (1 : 2 : 3 : Nil) (-99)
+  log $ show $ (1 : 2 : 3 : Nil) !! 1
   log "🍝"
 
 -- 5.4 --
@@ -144,3 +141,5 @@ indexB  l i = go l i where
   go Nil _ = Nothing
   go (x : xs) ci | ci == 0  = Just x
                  | otherwise = go xs (ci - 1)
+-- 5.22 --
+infixl 8 index as !!
