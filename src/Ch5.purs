@@ -8,15 +8,7 @@ import Prelude (Unit, discard, show, (+), (==))
 
 test :: Effect Unit
 test = do
-  log $ show $ init (Nil :: List Unit)
-  log $ show $ init $ 1 : Nil
-  log $ show $ init $ 1 : 2 : Nil
-  log $ show $ init $ 1 : 2 : 3 : Nil
-
-  log $ show $ init' (Nil :: List Unit)
-  log $ show $ init' $ 1 : Nil
-  log $ show $ init' $ 1 : 2 : Nil
-  log $ show $ init' $ 1 : 2 : 3 : Nil
+  log $ show $ uncons (1 : 2 : 3 : Nil)
   log "🍝"
 
 -- 5.4 --
@@ -129,3 +121,8 @@ init' l    = Just $ go l where
   go Nil = Nil
   go (_ : Nil) = Nil
   go (y : ys)  = y : go ys
+
+-- 5.20 --
+uncons :: ∀ a. List a -> Maybe { head :: a, tail :: List a }
+uncons Nil = Nothing
+uncons (x : xs) = Just { head : x , tail : xs }
