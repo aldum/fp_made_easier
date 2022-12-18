@@ -78,9 +78,4 @@ tail' :: ∀ a. List a -> List a
 tail' Nil = Nil
 tail' (_ : xs) = xs
 
--- ----------------
-flip' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
-flip' f = \b a -> f a b
 
-flip'' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
-flip'' f b = \a -> f a b
