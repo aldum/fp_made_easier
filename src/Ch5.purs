@@ -1,13 +1,15 @@
 module Ch5 where
 
+import Prelude (Unit, discard, show, (+))
 import Data.List (List(..), (:))
+
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (Unit, discard, show)
 
 test :: Effect Unit
 test = do
   log $ show $ snoc (1 : 2 : Nil) 3
+  log $ show $ length $ snoc (1 : 2 : Nil) 3
   log "🍝"
 
 flip :: ∀ a b c. (a -> b -> c) -> b -> a -> c
@@ -43,6 +45,11 @@ null _ = false
 snoc :: ∀ a. List a -> a -> List a
 snoc Nil n = singleton n
 snoc (x : xs) n = x : snoc xs n
+
+-- 5.14 --
+length :: ∀ a. List a -> Int
+length Nil = 0
+length (_ : xs) = 1 + length xs
 
 -- ----------------
 flip' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
