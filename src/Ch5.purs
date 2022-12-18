@@ -8,8 +8,10 @@ import Prelude (type (~>), Unit, discard, otherwise, show, (+), (-), (<), (==))
 
 test :: Effect Unit
 test = do
-  log $ show $ reverse (10 : 20 : 30 : Nil) -- ❶ Prints (30 : 20 : 10 : Nil)
-  log $ show $ reverse' (10 : 20 : 30 : Nil) -- ❶ Prints (30 : 20 : 10 : Nil)
+  log $ show $ concat2 (1 : 2 : 3 : Nil) (4 : 5 : Nil)
+  log $ show $ concat ((1 : 2 : 3 : Nil) : (4 : 5 : Nil) : (10 : 11 : Nil) : Nil)
+
+  log $ show $ concat' ((1 : 2 : 3 : Nil) : (4 : 5 : Nil) : (10 : 11 : Nil) : Nil)
   log "🍝"
 
 -- 5.4 --
@@ -172,3 +174,26 @@ reverse' l = go Nil l where
   go :: List a -> List a -> List a
   go acc Nil = acc
   go acc (x : xs) = go (x : acc) xs
+
+-- 5.27 --
+concat2 :: ∀ a. List a -> List a -> List a
+concat2 Nil l = l
+concat2 l Nil = l
+concat2 l1 l2 = go l1 l2 where
+  go :: List a -> List a -> List a
+  go acc Nil = acc
+  go acc (x : xs) = go (snoc acc x) xs
+
+concat :: ∀ a. List (List a) -> List a
+concat Nil = Nil
+concat ll = go Nil ll where
+  go :: List a -> List (List a) -> List a
+  go acc Nil = acc
+  go acc (l : ls) = go (concat2 acc l) ls
+
+concat' :: ∀ a. List (List a) -> List a
+concat' Nil = Nil
+-- concat ??? = x : concat ??? -- from the book
+concat' (l : Nil) = l
+concat' (Nil : ls) = concat (ls)
+concat' ((x : xs) : ls) = x : concat (xs : ls)
