@@ -4,26 +4,40 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (Unit, discard, show, (+))
+import Prelude (Unit, discard, show, (+), (==))
 
 test :: Effect Unit
 test = do
-  log $ show (head Nil :: Maybe Unit)
-  log $ show $ head ("abc" : "123" : Nil)
-  log $ show (tail Nil :: Maybe (List Unit) )
-  log $ show $ tail ("abc" : "123" : Nil)
+  log $ show $ (last Nil :: Maybe Unit)
+  log $ show $ last $ "a" : "b" : "c" : Nil
+  log $ show $ (last' Nil :: Maybe Unit)
+  log $ show $ last' $ "a" : "b" : "c" : Nil
   log "🍝"
+
+-- 5.4 --
 
 flip :: ∀ a b c. (a -> b -> c) -> b -> a -> c
 flip f a b = f b a
 
+flip' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
+flip' f = \b a -> f a b
+
+flip'' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
+flip'' f b = \a -> f a b
+
+-- 5.5 --
+
 const :: ∀ a b. a -> b -> a
 const a _ = a
+
+-- 5.7 --
 
 apply :: ∀ a b. (a -> b) -> a -> b
 apply f x = f x
 
 infixr 0 apply as $
+
+-- 5.8 --
 
 applyFlipped :: ∀ a b. a -> (a -> b) -> b
 applyFlipped x f = f x
@@ -78,4 +92,19 @@ tail' :: ∀ a. List a -> List a
 tail' Nil = Nil
 tail' (_ : xs) = xs
 
+-- 5.18 --
+last :: ∀ a. List a -> Maybe a
+last      Nil  = Nothing
+last (x : Nil) = Just (x)
+last (_ : xs)  = last xs
+
+-- from the book
+lastB :: ∀ a. List a -> Maybe a
+lastB      Nil = Nothing
+lastB (_ : xs) = if length xs == 1 then head xs else last xs
+
+last' :: ∀ a. List a -> Maybe a
+last' Nil                       = Nothing
+last' (_ : xs) | length xs == 1 = head xs
+last' (_ : xs)                  = last xs
 
