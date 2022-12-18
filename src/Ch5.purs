@@ -4,14 +4,12 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (Unit, discard, negate, otherwise, show, (+), (-), (==), (/=), (<))
+import Prelude (type (~>), Unit, discard, otherwise, show, (+), (-), (<), (==))
 
 test :: Effect Unit
 test = do
-  log $ show $ findLastIndex (_ == 10) (Nil :: List Int) -- ❷ Prints Nothing.
-  log $ show $ findLastIndex (_ == 10) (10 : 5 : 10 : -1 : 2 : 10 : Nil) -- ❹ Prints (Just 5)
-  log $ show $ findLastIndex (_ == 10) (11 : 12 : Nil) -- ❺ Prints Nothing.
-  log $ show $ findLastIndex (_ /= 10) (11 : 12 : Nil)
+  log $ show $ reverse (10 : 20 : 30 : Nil) -- ❶ Prints (30 : 20 : 10 : Nil)
+  log $ show $ reverse' (10 : 20 : 30 : Nil) -- ❶ Prints (30 : 20 : 10 : Nil)
   log "🍝"
 
 -- 5.4 --
@@ -162,3 +160,15 @@ findLastIndex p l = go Nothing 0 l where
   go mi _ Nil = mi
   go mi i (x : xs) | p x       = go (Just i) (i + 1) xs
                    | otherwise = go mi (i + 1) xs
+
+-- 5.26 --
+-- reverse :: ∀ a. List a -> List a
+reverse :: List ~> List
+reverse Nil      = Nil
+reverse (x : xs) = snoc (reverse xs) x
+
+reverse' :: ∀ a. List a -> List a
+reverse' l = go Nil l where
+  go :: List a -> List a -> List a
+  go acc Nil = acc
+  go acc (x : xs) = go (x : acc) xs
