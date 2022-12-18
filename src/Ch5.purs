@@ -8,12 +8,9 @@ import Effect.Console (log)
 
 test :: Effect Unit
 test = do
-  log (show (flip const 1 2))
-  log $ show $ flip const 1 2
-  flip const 1 2 # show # log
-  -- log $ show (flip' const 1 2)
-  -- log $ show (flip'' const 1 2)
   log $ show $ singleton "xyz"
+  log $ show $ null Nil
+  log $ show $ null ("abc" : Nil)
   log "🍝"
 
 flip :: ∀ a b c. (a -> b -> c) -> b -> a -> c
@@ -39,6 +36,11 @@ infixl 1 applyFlipped as #
 -- 5.11 --
 singleton :: ∀ a. a -> List a
 singleton a = a : Nil
+
+-- 5.12 --
+null :: ∀ a. List a -> Boolean
+null Nil = true
+null _ = false
 
 -- ----------------
 flip' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
