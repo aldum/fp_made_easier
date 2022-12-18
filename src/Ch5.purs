@@ -1,15 +1,15 @@
 module Ch5 where
 
-import Prelude (Unit, discard, show, (+))
 import Data.List (List(..), (:))
-
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
+import Prelude (Unit, discard, show, (+))
 
 test :: Effect Unit
 test = do
-  log $ show $ snoc (1 : 2 : Nil) 3
-  log $ show $ length $ snoc (1 : 2 : Nil) 3
+  log $ show (head Nil :: Maybe Unit)
+  log $ show $ head ("abc" : "123" : Nil)
   log "🍝"
 
 flip :: ∀ a b c. (a -> b -> c) -> b -> a -> c
@@ -61,6 +61,11 @@ length' l = go 0 l where
 lengthTail :: ∀ a. Int -> List a -> Int
 lengthTail acc Nil = acc
 lengthTail acc (_ : xs) = lengthTail (acc + 1) xs
+
+-- 5.16 --
+head :: ∀ a. List a -> Maybe a
+head Nil = Nothing
+head (x : _) = Just x
 
 -- ----------------
 flip' :: ∀ a b c. (a -> b -> c) -> (b -> a -> c)
