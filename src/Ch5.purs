@@ -5,20 +5,17 @@ import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, Void, discard, max, negate, otherwise, show, (+), (-), (<), (<<<), (<=), (==), (>), (>=), (>>>))
+import Prelude (type (~>), Unit, Void, discard, max, negate, otherwise, show, (+), (-), (<), (<<<), (<=), (==), (>), (>>>))
 import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ takeEnd 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (4 : 5 : 6 : Nil)
-  log $ show $ takeEnd 10 (1 : Nil) -- ❷ Prints (1 : Nil)
-  log $ show $ takeEnd 1 (1 : 2 : 3 : 4 : Nil) -- Prints (4 : Nil)
-  log $ show $ takeEnd 5 (1 : 2 : Nil) -- Prints (1 : 2 : Nil)
   log "🍝"
-  log $ show $ takeEndB' 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (4 : 5 : 6 : Nil)
-  log $ show $ takeEndB' 10 (1 : Nil) -- ❷ Prints (1 : Nil)
-  log $ show $ takeEndB' 1 (1 : 2 : 3 : 4 : Nil) -- Prints (4 : Nil)
-  log $ show $ takeEndB' 5 (1 : 2 : Nil) -- Prints (1 : 2 : Nil)
+  log $ show $ zip (1 : 2 : 3 : Nil) ("a" : "b" : "c" : "d" : "e" : Nil) -- ❶
+  -- ❶ Prints ((Tuple 1 "a") : (Tuple 2 "b") : (Tuple 3 "c") : Nil).
+  log $ show $ zip ("a" : "b" : "c" : "d" : "e" : Nil) (1 : 2 : 3 : Nil) -- ❷
+  -- ❷ Prints ((Tuple "a" 1) : (Tuple "b" 2) : (Tuple "c" 3) : Nil).
+  log $ show $ zip (Nil :: List Unit) (1 : 2 : Nil)
   log "🍝"
 
 
@@ -345,4 +342,19 @@ takeEndB' n = go >>> snd where
 
 -- 5.40 --
 -- 5.41 --
+zip :: ∀ a b. List a -> List b -> List (Tuple a b)
+zip =
+  let
+    go :: List (Tuple a b) -> List a -> List b -> List (Tuple a b)
+    go acc _   Nil       = reverse acc
+    go acc Nil _         = reverse acc
+    go acc (x:xs) (y:ys) = go ( Tuple x y : acc) xs ys
+  in
+    go Nil
+
+zipB :: ∀ a b. List a -> List b -> List (Tuple a b)
+zipB _   Nil           = Nil
+zipB Nil _             = Nil
+zipB (x : xs) (y : ys) = Tuple x y : zip xs ys
+
 -- 5.42 --
