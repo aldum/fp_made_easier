@@ -4,15 +4,13 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, Void, discard, negate, otherwise, show, (+), (-), (<), (<<<), (==), (>))
+import Prelude (type (~>), Unit, Void, discard, max, negate, otherwise, show, (+), (-), (<), (<<<), (==), (>))
 import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ range' 1 10 -- ❶ Prints (1 : 2 : 3 : 4 : 5 : 6 : 7 : 8 : 9 : 10 : Nil)
-  log $ show $ range' 3 (-3) -- ❷ Prints (3 : 2 : 1 : 0 : -1 : -2 : -3 : Nil)
-  log $ show $ range'' 1 10 -- ❶ Prints (1 : 2 : 3 : 4 : 5 : 6 : 7 : 8 : 9 : 10 : Nil)
-  log $ show $ range'' 3 (-3) -- ❷ Prints (3 : 2 : 1 : 0 : -1 : -2 : -3 : Nil)
+  log $ show $ take 5 (12 : 13 : 14 : Nil) -- ❶ Prints (12 : 13 : 14 : Nil)
+  log $ show $ take 5 (-7 : 9 : 0 : 12 : -13 : 45 : 976 : -19 : Nil) -- ❷ Prints (-7 : 9 : 0 : 12 : -13 : Nil)
   log "🍝"
 
 void :: ∀ a . a -> Void
@@ -254,3 +252,29 @@ range'' s e = go Nil e s where
   go :: List Int -> Int -> Int -> List Int
   go acc s' e' | s' == e'  = (s' : acc)
                | otherwise = go (s' : acc) (s' + d) e'
+
+-- 5.34 --
+take :: forall a. Int -> List a -> List a
+take n l = go Nil (max 0 n) l where
+  go :: List a -> Int -> List a -> List a
+  go acc 0 _         = reverse acc
+  go acc _ Nil       = reverse acc
+  go acc n' (x : xs) = go (x : acc) (n' - 1) xs
+
+take' :: forall a. Int -> List a -> List a
+take' = go Nil where
+  go :: List a -> Int -> List a -> List a
+  go acc 0 _             = reverse acc
+  go acc neg _ | neg < 0 = reverse acc
+  go acc _ Nil           = reverse acc
+  go acc n (x : xs)      = go (x : acc) (n - 1) xs
+
+
+-- 5.35 --
+-- 5.36 --
+-- 5.37 --
+-- 5.38 --
+-- 5.39 --
+-- 5.40 --
+-- 5.41 --
+-- 5.42 --
