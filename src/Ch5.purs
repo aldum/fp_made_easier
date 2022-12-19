@@ -4,14 +4,17 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, discard, otherwise, show, (+), (-), (<), (<<<), (==), (>))
+import Prelude (type (~>), Unit, Void, discard, otherwise, show, (+), (-), (<), (<<<), (==))
 import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ filter (4 > _) $ (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (1 : 2 : 3 : Nil)
-  log $ show $ filterTail (4 > _) $ (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (1 : 2 : 3 : Nil)
+  log $ show $ catMaybes (Just 1 : Nothing : Just 2 : Nothing : Nothing : Just 5 : Nil)
+  -- ❶ Prints (1 : 2 : 5 : Nil)
   log "🍝"
+
+void :: ∀ a . a -> Void
+void = undefined
 
 -- 5.4 --
 
@@ -216,3 +219,11 @@ filterTail' :: ∀ a. (a -> Boolean) -> List a -> List a
 filterTail' p = reverse <<< go Nil where
   go nl Nil = nl
   go nl (x : xs) = if p x then go (x : nl) xs else go nl xs
+
+-- 5.31 --
+catMaybes :: ∀ a. List (Maybe a) -> List a
+catMaybes Nil      = Nil
+catMaybes (m : ms) = case m of
+  Nothing -> catMaybes ms
+  Just x -> x : catMaybes ms
+
