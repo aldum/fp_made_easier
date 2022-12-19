@@ -4,13 +4,13 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, Void, discard, otherwise, show, (+), (-), (<), (<<<), (==))
+import Prelude (type (~>), Unit, Void, discard, negate, otherwise, show, (+), (-), (<), (<<<), (==), (>))
 import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ catMaybes (Just 1 : Nothing : Just 2 : Nothing : Nothing : Just 5 : Nil)
-  -- ❶ Prints (1 : 2 : 5 : Nil)
+  log $ show $ range 1 10 -- ❶ Prints (1 : 2 : 3 : 4 : 5 : 6 : 7 : 8 : 9 : 10 : Nil)
+  log $ show $ range 3 (-3) -- ❷ Prints (3 : 2 : 1 : 0 : -1 : -2 : -3 : Nil)
   log "🍝"
 
 void :: ∀ a . a -> Void
@@ -226,4 +226,15 @@ catMaybes Nil      = Nil
 catMaybes (m : ms) = case m of
   Nothing -> catMaybes ms
   Just x -> x : catMaybes ms
+
+-- 5.32 --
+sign :: Int -> Int
+sign a = if a > 0 then 1 else -1
+
+range :: Int -> Int -> List Int
+range s e = go Nil s e where
+  d = sign (e - s)
+  go :: List Int -> Int -> Int -> List Int
+  go acc si ei | si == ei  = reverse (si : acc)
+               | otherwise = go (si : acc) (si + d) ei
 
