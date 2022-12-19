@@ -317,20 +317,16 @@ takeEndB n l = drop (max 0 $ length l - n) l
 
 takeEnd :: ∀ a. Int -> List a -> List a
 takeEnd n _ | n <= 0 = Nil
-takeEnd n l = -- go n l where
-  -- go :: Int -> Int -> List a -> List a
-  -- go _ Nil = Nil
-  -- go _ (x: Nil) = singleton x
-  -- go i (x : xs) = if i < n then x : go (i + 1) xs else go (i + 1) xs
+takeEnd n l =
   let
-    go :: Int -> List a -> Tuple Int (List a)
-    go _ Nil      = Tuple 0 Nil
-    go _ (x: Nil) = Tuple 1 $ singleton x
-    go i (x : xs) = Tuple (len + 1) l' where
-      Tuple len li = go (i + 1) xs
+    go :: List a -> Tuple Int (List a)
+    go Nil      = Tuple 0 Nil
+    go (x: Nil) = Tuple 1 $ singleton x
+    go (x : xs) = Tuple (len + 1) l' where
+      Tuple len li = go  xs
       l' =  if len < n then x : li else li
   in
-    snd $ go 1 l
+    snd $ go l
 
 -- 5.39 --
 -- 5.40 --
