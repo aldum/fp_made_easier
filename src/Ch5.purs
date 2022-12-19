@@ -9,14 +9,8 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ takeWhile (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil) -- ❶ Prints (5 : 4 : Nil)
-  log $ show $ takeWhile (_ == -17) (1 : 2 : 3 : Nil) -- ❷ Prints Nil
-  log "🍝"
-  log $ show $ takeWhile' (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil) -- ❶ Prints (5 : 4 : Nil)
-  log $ show $ takeWhile' (_ == -17) (1 : 2 : 3 : Nil) -- ❷ Prints Nil
-  log "🍝"
-  log $ show $ takeWhile'' (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil) -- ❶ Prints (5 : 4 : Nil)
-  log $ show $ takeWhile'' (_ == -17) (1 : 2 : 3 : Nil) -- ❷ Prints Nil
+  log $ show $ dropWhile (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil) -- ❶ Prints (3 : 99 : 101 : Nil)
+  log $ show $ dropWhile (_ == -17) (1 : 2 : 3 : Nil) -- ❷ Prints (1 : 2 : 3 : Nil
   log "🍝"
 
 
@@ -309,6 +303,11 @@ takeWhile'' p (x : xs) | p x = x : takeWhile'' p xs
 takeWhile'' _ _              = Nil
 
 -- 5.37 --
+dropWhile :: ∀ a. (a -> Boolean) -> List a -> List a
+dropWhile _ Nil = Nil
+dropWhile p (x: xs) | p x = dropWhile p xs
+dropWhile _ l             = l
+
 -- 5.38 --
 -- 5.39 --
 -- 5.40 --
