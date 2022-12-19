@@ -11,11 +11,16 @@ import Undefined (undefined)
 test :: Effect Unit
 test = do
   log "🍝"
-  log $ show $ zip (1 : 2 : 3 : Nil) ("a" : "b" : "c" : "d" : "e" : Nil) -- ❶
-  -- ❶ Prints ((Tuple 1 "a") : (Tuple 2 "b") : (Tuple 3 "c") : Nil).
-  log $ show $ zip ("a" : "b" : "c" : "d" : "e" : Nil) (1 : 2 : 3 : Nil) -- ❷
-  -- ❷ Prints ((Tuple "a" 1) : (Tuple "b" 2) : (Tuple "c" 3) : Nil).
-  log $ show $ zip (Nil :: List Unit) (1 : 2 : Nil)
+  log $ show $ unzip (Tuple 1 "a" : Tuple 2 "b" : Tuple 3 "c" : Nil) -- ❶
+  -- ❶ Prints (Tuple (1 : 2 : 3 : Nil) ("a" : "b" : "c" : Nil)).
+  log $ show $ unzip (Tuple "a" 1 : Tuple "b" 2 : Tuple "c" 3 : Nil) -- ❷
+  -- ❷ Prints (Tuple ("a" : "b" : "c" : Nil) (1 : 2 : 3 : Nil)).
+  log $ show $ unzip (Nil :: List (Tuple Unit Unit)) -- ❹
+  -- ❹ Prints (Tuple Nil Nil).
+  log "🍝"
+  log $ show $ unzipB (Tuple 1 "a" : Tuple 2 "b" : Tuple 3 "c" : Nil)
+  log $ show $ unzipB (Tuple "a" 1 : Tuple "b" 2 : Tuple "c" 3 : Nil)
+  log $ show $ unzipB (Nil :: List (Tuple Unit Unit))
   log "🍝"
 
 
@@ -358,3 +363,17 @@ zipB Nil _             = Nil
 zipB (x : xs) (y : ys) = Tuple x y : zip xs ys
 
 -- 5.42 --
+unzip :: ∀ a b. List (Tuple a b) -> Tuple (List a) (List b)
+-- unzip Nil               = Tuple Nil Nil
+unzip =
+  let
+    go :: List a -> List b -> List (Tuple a b) -> Tuple (List a) (List b)
+    go accA accB Nil = Tuple (reverse accA) (reverse accB)
+    go accA accB (Tuple a b : abs) = go (a:accA) (b:accB) abs
+  in
+    go Nil Nil
+
+unzipB :: ∀ a b. List (Tuple a b) -> Tuple (List a) (List b)
+unzipB Nil = Tuple Nil Nil
+unzipB (Tuple x y : ts) =
+  unzipB ts # \(Tuple xs ys) -> Tuple (x : xs) (y : ys)
