@@ -9,9 +9,14 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ drop 0 (1 : 2 : 3 : Nil) -- Prints (1 : 2 : 3 : Nil)
-  log $ show $ drop 2 (1 : 2 : 3 : 4 : 5 : 6 : 7 : Nil) -- ❶ Prints (3 : 4 : 5 : 6 : 7 : Nil)
-  log $ show $ drop 10 (Nil :: List Unit) -- ❸ Prints Nil
+  log $ show $ takeWhile (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil) -- ❶ Prints (5 : 4 : Nil)
+  log $ show $ takeWhile (_ == -17) (1 : 2 : 3 : Nil) -- ❷ Prints Nil
+  log "🍝"
+  log $ show $ takeWhile' (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil) -- ❶ Prints (5 : 4 : Nil)
+  log $ show $ takeWhile' (_ == -17) (1 : 2 : 3 : Nil) -- ❷ Prints Nil
+  log "🍝"
+  log $ show $ takeWhile'' (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil) -- ❶ Prints (5 : 4 : Nil)
+  log $ show $ takeWhile'' (_ == -17) (1 : 2 : 3 : Nil) -- ❷ Prints Nil
   log "🍝"
 
 
@@ -286,6 +291,23 @@ dropB _ Nil      = Nil
 dropB n (_ : xs) = dropB (n - 1) xs
 
 -- 5.36 --
+takeWhile :: ∀ a. (a -> Boolean) -> List a -> List a
+takeWhile = go Nil where
+  go :: List a -> (a -> Boolean) -> List a -> List a
+  go acc _ Nil = reverse acc
+  go acc p (x : xs) | p x       = go (x : acc) p xs
+                    | otherwise = reverse acc
+
+takeWhile' :: ∀ a. (a -> Boolean) -> List a -> List a
+takeWhile' _ Nil                  = Nil
+takeWhile' p (x : xs) | p x       = x : takeWhile' p xs
+                      | otherwise = Nil
+
+takeWhile'' :: ∀ a. (a -> Boolean) -> List a -> List a
+takeWhile'' _ Nil            = Nil
+takeWhile'' p (x : xs) | p x = x : takeWhile'' p xs
+takeWhile'' _ _              = Nil
+
 -- 5.37 --
 -- 5.38 --
 -- 5.39 --
