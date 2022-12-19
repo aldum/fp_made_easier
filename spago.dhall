@@ -10,6 +10,7 @@ You can edit this file as you like.
     , "maybe"
     , "prelude"
     , "psci-support"
+    , "tuples"
     , "undefined"
     ]
 , packages = ./packages.dhall

@@ -2,15 +2,16 @@ module Ch5 where
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
+import Data.Tuple (Tuple(..), snd)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, Void, discard, max, negate, otherwise, show, (+), (-), (<), (<<<), (==), (>))
+import Prelude (type (~>), Unit, Void, discard, max, negate, otherwise, show, (+), (-), (<), (<<<), (<=), (==), (>), (>=))
 import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ dropWhile (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil) -- ❶ Prints (3 : 99 : 101 : Nil)
-  log $ show $ dropWhile (_ == -17) (1 : 2 : 3 : Nil) -- ❷ Prints (1 : 2 : 3 : Nil
+  log $ show $ takeEnd 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (4 : 5 : 6 : Nil)
+  log $ show $ takeEnd 10 (1 : Nil) -- ❷ Prints (1 : Nil)
   log "🍝"
 
 
@@ -135,10 +136,10 @@ uncons (x : xs) = Just { head : x , tail : xs }
 
 -- 5.21 --
 index :: ∀ a. List a -> Int -> Maybe a
-index Nil _ = Nothing
+index Nil _       = Nothing
 index _ i | i < 0 = Nothing
-index (x : _) 0 = Just x
-index (_ : xs) i = index xs (i - 1)
+index (x : _) 0   = Just x
+index (_ : xs) i  = index xs (i - 1)
 
 indexB :: ∀ a. List a -> Int -> Maybe a
 indexB Nil _ = Nothing
@@ -309,6 +310,26 @@ dropWhile p (x: xs) | p x = dropWhile p xs
 dropWhile _ l             = l
 
 -- 5.38 --
+takeEndB :: ∀ a. Int -> List a -> List a
+takeEndB n l = drop (max 0 $ length l - n) l
+
+takeEnd :: ∀ a. Int -> List a -> List a
+takeEnd n _ | n <= 0 = Nil
+takeEnd n l = -- go n l where
+  -- go :: Int -> Int -> List a -> List a
+  -- go _ Nil = Nil
+  -- go _ (x: Nil) = singleton x
+  -- go i (x : xs) = if i < n then x : go (i + 1) xs else go (i + 1) xs
+  let
+    go :: Int -> List a -> Tuple Int (List a)
+    go _ Nil      = Tuple 0 Nil
+    go _ (x: Nil) = Tuple 1 $ singleton x
+    go i (x : xs) = Tuple (len + 1) l' where
+      Tuple len li = go (i + 1) xs
+      l' =  if i >= n then x : li else li
+  in
+    snd $ go 0 l
+
 -- 5.39 --
 -- 5.40 --
 -- 5.41 --
