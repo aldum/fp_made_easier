@@ -12,6 +12,8 @@ test :: Effect Unit
 test = do
   log $ show $ takeEnd 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (4 : 5 : 6 : Nil)
   log $ show $ takeEnd 10 (1 : Nil) -- ❷ Prints (1 : Nil)
+  log $ show $ takeEnd 1 (1 : 2 : 3 : 4 : Nil) -- Prints (4 : Nil)
+  log $ show $ takeEnd 5 (1 : 2 : Nil) -- Prints (1 : 2 : Nil)
   log "🍝"
 
 
@@ -326,9 +328,9 @@ takeEnd n l = -- go n l where
     go _ (x: Nil) = Tuple 1 $ singleton x
     go i (x : xs) = Tuple (len + 1) l' where
       Tuple len li = go (i + 1) xs
-      l' =  if i >= n then x : li else li
+      l' =  if len < n then x : li else li
   in
-    snd $ go 0 l
+    snd $ go 1 l
 
 -- 5.39 --
 -- 5.40 --
