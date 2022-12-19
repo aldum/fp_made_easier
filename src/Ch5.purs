@@ -9,8 +9,10 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ range 1 10 -- ❶ Prints (1 : 2 : 3 : 4 : 5 : 6 : 7 : 8 : 9 : 10 : Nil)
-  log $ show $ range 3 (-3) -- ❷ Prints (3 : 2 : 1 : 0 : -1 : -2 : -3 : Nil)
+  log $ show $ range' 1 10 -- ❶ Prints (1 : 2 : 3 : 4 : 5 : 6 : 7 : 8 : 9 : 10 : Nil)
+  log $ show $ range' 3 (-3) -- ❷ Prints (3 : 2 : 1 : 0 : -1 : -2 : -3 : Nil)
+  log $ show $ range'' 1 10 -- ❶ Prints (1 : 2 : 3 : 4 : 5 : 6 : 7 : 8 : 9 : 10 : Nil)
+  log $ show $ range'' 3 (-3) -- ❷ Prints (3 : 2 : 1 : 0 : -1 : -2 : -3 : Nil)
   log "🍝"
 
 void :: ∀ a . a -> Void
@@ -238,3 +240,17 @@ range s e = go Nil s e where
   go acc si ei | si == ei  = reverse (si : acc)
                | otherwise = go (si : acc) (si + d) ei
 
+-- 5.33 --
+range' :: Int -> Int -> List Int
+range' s e = go Nil s where
+  d = sign (e - s)
+  go :: List Int -> Int -> List Int
+  go acc i | i == e  = reverse (i : acc)
+           | otherwise = go (i : acc) (i + d)
+
+range'' :: Int -> Int -> List Int
+range'' s e = go Nil e s where
+  d = if s < e then (-1) else 1
+  go :: List Int -> Int -> Int -> List Int
+  go acc s' e' | s' == e'  = (s' : acc)
+               | otherwise = go (s' : acc) (s' + d) e'
