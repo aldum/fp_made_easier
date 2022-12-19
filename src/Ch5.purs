@@ -9,9 +9,11 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ take 5 (12 : 13 : 14 : Nil) -- ❶ Prints (12 : 13 : 14 : Nil)
-  log $ show $ take 5 (-7 : 9 : 0 : 12 : -13 : 45 : 976 : -19 : Nil) -- ❷ Prints (-7 : 9 : 0 : 12 : -13 : Nil)
+  log $ show $ drop 0 (1 : 2 : 3 : Nil) -- Prints (1 : 2 : 3 : Nil)
+  log $ show $ drop 2 (1 : 2 : 3 : 4 : 5 : 6 : 7 : Nil) -- ❶ Prints (3 : 4 : 5 : 6 : 7 : Nil)
+  log $ show $ drop 10 (Nil :: List Unit) -- ❸ Prints Nil
   log "🍝"
+
 
 void :: ∀ a . a -> Void
 void = undefined
@@ -254,14 +256,14 @@ range'' s e = go Nil e s where
                | otherwise = go (s' : acc) (s' + d) e'
 
 -- 5.34 --
-take :: forall a. Int -> List a -> List a
+take :: ∀ a. Int -> List a -> List a
 take n l = go Nil (max 0 n) l where
   go :: List a -> Int -> List a -> List a
   go acc 0 _         = reverse acc
   go acc _ Nil       = reverse acc
   go acc n' (x : xs) = go (x : acc) (n' - 1) xs
 
-take' :: forall a. Int -> List a -> List a
+take' :: ∀ a. Int -> List a -> List a
 take' = go Nil where
   go :: List a -> Int -> List a -> List a
   go acc 0 _             = reverse acc
@@ -271,6 +273,18 @@ take' = go Nil where
 
 
 -- 5.35 --
+drop :: ∀ a. Int -> List a -> List a
+drop = go where
+  go :: Int -> List a -> List a
+  go 0 l        = l
+  go _ Nil      = Nil
+  go n (_ : xs) = go (n - 1) xs
+
+dropB :: ∀ a. Int -> List a -> List a
+dropB 0 l        = l
+dropB _ Nil      = Nil
+dropB n (_ : xs) = dropB (n - 1) xs
+
 -- 5.36 --
 -- 5.37 --
 -- 5.38 --
