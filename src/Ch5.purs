@@ -5,7 +5,7 @@ import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, Void, discard, max, negate, otherwise, show, (+), (-), (<), (<<<), (<=), (==), (>), (>=))
+import Prelude (type (~>), Unit, Void, discard, max, negate, otherwise, show, (+), (-), (<), (<<<), (<=), (==), (>), (>=), (>>>))
 import Undefined (undefined)
 
 test :: Effect Unit
@@ -14,6 +14,11 @@ test = do
   log $ show $ takeEnd 10 (1 : Nil) -- ❷ Prints (1 : Nil)
   log $ show $ takeEnd 1 (1 : 2 : 3 : 4 : Nil) -- Prints (4 : Nil)
   log $ show $ takeEnd 5 (1 : 2 : Nil) -- Prints (1 : 2 : Nil)
+  log "🍝"
+  log $ show $ takeEndB' 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (4 : 5 : 6 : Nil)
+  log $ show $ takeEndB' 10 (1 : Nil) -- ❷ Prints (1 : Nil)
+  log $ show $ takeEndB' 1 (1 : 2 : 3 : 4 : Nil) -- Prints (4 : Nil)
+  log $ show $ takeEndB' 5 (1 : 2 : Nil) -- Prints (1 : 2 : Nil)
   log "🍝"
 
 
@@ -323,12 +328,21 @@ takeEnd n l =
     go Nil      = Tuple 0 Nil
     go (x: Nil) = Tuple 1 $ singleton x
     go (x : xs) = Tuple (len + 1) l' where
-      Tuple len li = go  xs
+      Tuple len li = go xs
       l' =  if len < n then x : li else li
   in
     snd $ go l
 
--- 5.39 --
+infixl 1 applyFlipped as |>
+
+takeEndB' :: ∀ a. Int -> List a -> List a
+takeEndB' n = go >>> snd where
+  go Nil      = Tuple 0 Nil
+  -- go (x : xs) = go xs
+  --   |> \(Tuple c nl) -> Tuple (c + 1) $ if c < n then x : nl else nl
+  go (x : xs) = go xs
+    |> \tup@(Tuple c nl) -> if c < n then Tuple (c + 1) (x : nl) else tup
+
 -- 5.40 --
 -- 5.41 --
 -- 5.42 --
