@@ -136,6 +136,17 @@ instance combineAddInt :: Combine AddInt where
 instance combineMultInt :: Combine MultInt where
   combine (MultInt x) (MultInt y) = MultInt (x * y)
 
+
+class IsRecord a where
+  isRecord :: a -> Boolean
+
+instance isRecordRecord :: IsRecord (Record a) where
+  isRecord _ = true
+-- instance isRecordOther :: IsRecord a where -- COMPILER ERROR ❸
+--   isRecord _ = false
+else instance isRecordOther :: IsRecord a where
+  isRecord _ = false
+
 -- -------------------
 --       data      ---
 -- -------------------
