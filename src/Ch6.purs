@@ -99,6 +99,11 @@ fullName' first last = unwrap first <> " " <> unwrap last
 newtype Ceo = Ceo Person
 newtype Janitor = Janitor Person
 
+instance hasAddressCeo :: HasAddress Ceo where
+  getAddress (Ceo p) = getAddress p
+instance hasAddressJanitor :: HasAddress Janitor where
+  getAddress (Janitor p) = getAddress p
+
 -- -------------------
 --       data      ---
 -- -------------------
