@@ -111,6 +111,31 @@ genericPersonHasAddress wrappedPerson =
   getAddress $ unwrap wrappedPerson
 
 
+-- 6.9
+data Overlap = Overlap
+-- instance overlapShow1 :: Show Overlap where
+--   show = "Overlap 1"
+-- instance overlapShow2 :: Show Overlap where -- COMPILER ERROR!!
+--   show = "Overlap 2"
+
+class Combine a where
+  combine :: a -> a -> a
+
+instance combineInt :: Combine Int where
+  combine = (+)
+
+-- instance combineMultInt :: Combine Int where -- OVERLAPPING INSTANCES!!
+--   combine = (*)
+
+newtype AddInt = AddInt Int
+newtype MultInt = MultInt Int
+
+instance combineAddInt :: Combine AddInt where
+  combine (AddInt x) (AddInt y) = AddInt (x + y)
+
+instance combineMultInt :: Combine MultInt where
+  combine (MultInt x) (MultInt y) = MultInt (x * y)
+
 -- -------------------
 --       data      ---
 -- -------------------
