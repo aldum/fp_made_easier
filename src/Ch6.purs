@@ -1,8 +1,10 @@
 module Ch6 where
 
 import Prelude
-
+import Data.Generic.Rep (class Generic)
+import Data.Show.Generic (genericShow)
 import Undefined (undefined)
+
 
 type Address =
   { street1 :: String
@@ -12,11 +14,11 @@ type Address =
   , zip :: String
   }
 
+class HasAddress a where
+  getAddress :: a -> Address
+
+
 type Directions = {}
-
-getDirections :: Address -> Directions
-getDirections _ = undefined
-
 
 data Person = Person
   { name :: String
@@ -31,18 +33,39 @@ data Residence
   = Home Address
   | Facility Address
 
+data EmptyLot = EmptyLot
+  { daysEmpty :: Int
+  , price :: Int
+  , address :: Address
+  }
 
-getPersonDirections :: Person -> Directions
-getPersonDirections (Person p) = getDirections p.address
+instance hasAddressPerson :: HasAddress Person where
+  getAddress (Person p) = p.address
 
-getCompanyDirections :: Company -> Directions
-getCompanyDirections (Company c) = getDirections c.address
+instance hasAddressCompany :: HasAddress Company where
+  getAddress (Company c) = c.address
 
-getResidenceDirections :: Residence -> Directions
-getResidenceDirections residence =
-  getDirections $ case residence of
-    Home address -> address
-    Facility address -> address
+instance hasAddressResidence :: HasAddress Residence where
+  getAddress (Home address) = address
+  getAddress (Facility address) = address
+
+instance hasAddressEmptyLot :: HasAddress EmptyLot where
+  getAddress (EmptyLot l) = l.address
+
+
+
+-- getDirections :: ∀ a. HasAddress => a -> Directions
+-- getDirections hasAddr = let address = getAddress hasAddr in
+--   undefined
+
+
+data SomeType = This | That | TheOther | AndYetAnother
+derive instance eqSomeType :: Eq SomeType
+derive instance ordSomeType :: Ord SomeType
+
+derive instance genericSomeType :: Generic SomeType _
+instance showSomeType :: Show SomeType where
+  show = genericShow
 
 -- -------------------
 --       data      ---
