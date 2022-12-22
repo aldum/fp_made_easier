@@ -99,18 +99,17 @@ fullName' first last = unwrap first <> " " <> unwrap last
 
 newtype Ceo = Ceo Person
 derive instance newtypeCeo :: Newtype Ceo _
+derive newtype instance hasAddressCeo :: HasAddress Ceo
 
 newtype Janitor = Janitor Person
 derive instance newtypeJanny :: Newtype Janitor _
+derive newtype instance hasAddressJanitor :: HasAddress Janitor
 
 
 genericPersonHasAddress :: ∀ a. Newtype a Person => a -> Address
 genericPersonHasAddress wrappedPerson =
   getAddress $ unwrap wrappedPerson
-instance hasAddressCeo :: HasAddress Ceo where
-  getAddress = genericPersonHasAddress
-instance hasAddressJanitor :: HasAddress Janitor where
-  getAddress = genericPersonHasAddress
+
 
 -- -------------------
 --       data      ---
