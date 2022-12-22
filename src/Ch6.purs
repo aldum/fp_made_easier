@@ -1,9 +1,10 @@
 module Ch6 where
 
 import Prelude
+
 import Data.Generic.Rep (class Generic)
-import Data.Show.Generic (genericShow)
 import Data.Newtype (class Newtype, unwrap)
+import Data.Show.Generic (genericShow)
 import Undefined (undefined)
 
 
@@ -97,12 +98,19 @@ fullName' first last = unwrap first <> " " <> unwrap last
 
 
 newtype Ceo = Ceo Person
-newtype Janitor = Janitor Person
+derive instance newtypeCeo :: Newtype Ceo _
 
+newtype Janitor = Janitor Person
+derive instance newtypeJanny :: Newtype Janitor _
+
+
+genericPersonHasAddress :: ∀ a. Newtype a Person => a -> Address
+genericPersonHasAddress wrappedPerson =
+  getAddress $ unwrap wrappedPerson
 instance hasAddressCeo :: HasAddress Ceo where
-  getAddress (Ceo p) = getAddress p
+  getAddress = genericPersonHasAddress
 instance hasAddressJanitor :: HasAddress Janitor where
-  getAddress (Janitor p) = getAddress p
+  getAddress = genericPersonHasAddress
 
 -- -------------------
 --       data      ---
