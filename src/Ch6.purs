@@ -3,6 +3,7 @@ module Ch6 where
 import Prelude
 import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
+import Data.Newtype (class Newtype, unwrap)
 import Undefined (undefined)
 
 
@@ -66,6 +67,37 @@ derive instance ordSomeType :: Ord SomeType
 derive instance genericSomeType :: Generic SomeType _
 instance showSomeType :: Show SomeType where
   show = genericShow
+
+-- 6.7
+newtype FirstName = FirstName String
+derive instance newTypeFirstName :: Newtype FirstName _
+derive instance eqFirstName :: Eq FirstName
+
+newtype LastName = LastName String
+derive instance newTypeLastName :: Newtype LastName _
+
+glueNames
+  :: ∀ a b
+  . Newtype a String
+  => Newtype b String
+  => String
+  -> a
+  -> b
+  -> String
+glueNames between n1 n2 = unwrap n1 <> between <> unwrap n2
+
+lastNameFirst :: LastName -> FirstName -> String
+lastNameFirst = glueNames ", "
+
+fullName :: FirstName -> LastName -> String
+fullName = glueNames " "
+
+fullName' :: FirstName -> LastName -> String
+fullName' first last = unwrap first <> " " <> unwrap last
+
+
+newtype Ceo = Ceo Person
+newtype Janitor = Janitor Person
 
 -- -------------------
 --       data      ---
