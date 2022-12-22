@@ -10,17 +10,16 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
+  log $ show $ takeEndB' 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (4 : 5 : 6 : Nil)
+  log $ show $ takeEndB' 7 (1 : Nil) -- ❷ Prints (1 : Nil)
+  log $ show $ takeEndB' 1 (1 : 2 : 3 : 4 : Nil) -- Prints (4 : Nil)
+  log $ show $ takeEndB' 5 (1 : 2 : Nil) -- Prints (1 : 2 : Nil)
   log "🍝"
-  log $ show $ unzip (Tuple 1 "a" : Tuple 2 "b" : Tuple 3 "c" : Nil) -- ❶
-  -- ❶ Prints (Tuple (1 : 2 : 3 : Nil) ("a" : "b" : "c" : Nil)).
-  log $ show $ unzip (Tuple "a" 1 : Tuple "b" 2 : Tuple "c" 3 : Nil) -- ❷
-  -- ❷ Prints (Tuple ("a" : "b" : "c" : Nil) (1 : 2 : 3 : Nil)).
-  log $ show $ unzip (Nil :: List (Tuple Unit Unit)) -- ❹
-  -- ❹ Prints (Tuple Nil Nil).
-  log "🍝"
-  log $ show $ unzipB (Tuple 1 "a" : Tuple 2 "b" : Tuple 3 "c" : Nil)
-  log $ show $ unzipB (Tuple "a" 1 : Tuple "b" 2 : Tuple "c" 3 : Nil)
-  log $ show $ unzipB (Nil :: List (Tuple Unit Unit))
+  log $ show $ dropEnd 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil) -- ❶ Prints (1 : 2 : 3 : Nil)
+  log $ show $ dropEnd 10 (1 : Nil) -- ❷ Prints Nil
+  log $ show $ dropEnd 3 ('a' : 'b' : 'c' : 'd' : Nil) -- Prints ('a' : Nil)
+  log $ show $ dropEnd 2 ('a' : 'b' : 'c' : 'd' : Nil) -- Prints ('a' : 'b' : Nil)
+  log $ show $ dropEnd 0 ('a' : 'b' : 'c' : 'd' : Nil) -- Prints ('a' : 'b' : 'c' : 'd'  : Nil)
   log "🍝"
 
 
@@ -328,7 +327,7 @@ takeEnd n l =
   let
     go :: List a -> Tuple Int (List a)
     go Nil      = Tuple 0 Nil
-    go (x: Nil) = Tuple 1 $ singleton x
+    -- go (x: Nil) = Tuple 1 $ singleton x
     go (x : xs) = Tuple (len + 1) l' where
       Tuple len li = go xs
       l' =  if len < n then x : li else li
@@ -346,6 +345,26 @@ takeEndB' n = go >>> snd where
     |> \tup@(Tuple c nl) -> if c < n then Tuple (c + 1) (x : nl) else tup
 
 -- 5.40 --
+dropEndB :: ∀ a. Int -> List a -> List a
+dropEndB n l = take (max 0 $ length l - n) l
+
+dropEnd :: ∀ a. Int -> List a -> List a
+dropEnd d l =
+  let
+    go :: List a -> Tuple Int (List a)
+    go Nil      = Tuple 0 Nil
+    go (x : xs) = Tuple (len + 1) l' where
+      Tuple len li = go xs
+      l' =  if len < d then li else x : li
+  in
+    snd $ go l
+
+dropEndB' :: ∀ a. Int -> List a -> List a
+dropEndB' n = go >>> snd where
+  go Nil = Tuple 0 Nil
+  go (x : xs) = go xs
+    # \(Tuple c nl) -> Tuple (c + 1) $ if c < n then nl else x : nl
+
 -- 5.41 --
 zip :: ∀ a b. List a -> List b -> List (Tuple a b)
 zip =
