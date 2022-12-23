@@ -5,7 +5,9 @@ import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, Void, discard, max, negate, otherwise, show, (+), (-), (<), (<<<), (<=), (==), (>), (>>>))
+import Prelude (type (~>), Unit, Void,
+                discard, max, negate, otherwise, show,
+                (+), (-), (<), (<<<), (<=), (==), (>), (>>>))
 import Undefined (undefined)
 
 test :: Effect Unit

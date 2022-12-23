@@ -5,8 +5,8 @@ import Prelude
 import Data.Generic.Rep (class Generic)
 import Data.Newtype (class Newtype, unwrap)
 import Data.Show.Generic (genericShow)
--- import Undefined (undefined)
 
+-- import Undefined (undefined)
 
 type Address =
   { street1 :: String
