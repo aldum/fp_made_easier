@@ -4,7 +4,7 @@ import Data.Eq (class Eq)
 import Data.Ord (class Ord, Ordering(..), compare)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (Unit, show, discard, (==), ($), (<), (>), (<=), (>=))
+import Prelude (Unit, show, discard, (==), ($), (<), (>), (<=))
 import Undefined (undefined)
 
 -- data Maybe a = Nothing | Just a
@@ -45,4 +45,12 @@ instance optionOrd :: Ord a => Ord (Option a) where
   compare None     (Some _) = LT
   compare (Some _) None     = GT
   compare (Some a) (Some b) = a `compare` b
+
+
+greaterThanOrEq :: ∀ a. Ord a => a -> a -> Boolean
+greaterThanOrEq x y | x == y = true
+greaterThanOrEq x y | x > y  = true
+greaterThanOrEq _ _          = false
+
+infixl 4 greaterThanOrEq as >=
 
