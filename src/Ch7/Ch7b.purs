@@ -39,3 +39,7 @@ instance personToCsv :: ToCSV Person where
     CSV $ show name <> ","
        <> show age <> ","
        <> show occupation
+
+-- 7.27
+class FromCSV a where
+  fromCSV :: CSV -> a
