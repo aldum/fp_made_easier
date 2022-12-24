@@ -21,9 +21,16 @@ instance showEither :: (Show a, Show b) => Show (Either a b) where
   show = genericShow
 
 test :: Effect Unit
-test = do
-  log $ show (Left "left" :: Either _ Unit) -- COMPILER ERROR!! ❶
-  log $ show (Right (Some 42) :: Either Unit _)
+test =
+  let x = Left "left" :: MyEitherVar
+      y :: MyEitherVar
+      y = Right $ Some 41
+  in
+    do
+      log $ show x
+      log $ show y
+
+type MyEitherVar = Either String (Option Int)
 
 -- 7.12
 -- instance optionShow :: Show a => Show (Option a) where
