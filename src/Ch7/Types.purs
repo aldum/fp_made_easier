@@ -1,16 +1,27 @@
 module Ch7.Types where
 
 import Data.Generic.Rep (class Generic)
+import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype)
 import Data.Show (class Show, show)
 import Data.Show.Generic (genericShow)
 import Prelude ((<>))
+import Undefined (undefined)
 
 newtype FullName = FullName String
 
 newtype Age = Age Int
 
 data Occupation = Doctor | Dentist | Lawyer | Unemployed
+
+fromString :: String -> Maybe Occupation
+fromString = case _ of
+  "Doctor"     -> Just Doctor
+  "Dentist"    -> Just Dentist
+  "Lawyer"     -> Just Lawyer
+  "Unemployed" -> Just Unemployed
+  _            -> Nothing
+
 
 data Person = Person
   { name :: FullName

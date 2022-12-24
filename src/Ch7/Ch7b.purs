@@ -3,8 +3,12 @@ module Ch7.Ch7b where
 import Ch7.Types
 import Prelude
 
-import Data.Maybe (Maybe)
+import Data.Generic.Rep (from)
+import Data.List (List(..))
+import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype)
+import Data.String (Pattern(..), split)
+import Data.Int (fromString) as ParseInt
 import Effect (Effect)
 import Effect.Console (log)
 import Undefined (undefined)
@@ -44,3 +48,12 @@ instance personToCsv :: ToCSV Person where
 -- 7.27
 class FromCSV a where
   fromCSV :: CSV -> Maybe a
+
+instance personFromCsv :: FromCSV Person where
+  fromCSV (CSV s) = case (split (Pattern ",") s) of
+    [n, a, o] -> case (fromString o) of
+      Just occ ->  case (ParseInt.fromString a) of
+          Just i    -> Just (Person { name: FullName n, age: Age i, occupation: occ })
+          Nothing   -> Nothing
+      Nothing  -> Nothing
+    _ -> Nothing
