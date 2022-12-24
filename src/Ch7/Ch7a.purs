@@ -4,7 +4,7 @@ import Data.Eq (class Eq)
 import Data.Ord (class Ord, Ordering(..), compare)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (Unit, show, discard, (==), ($), (<), (>), (<=))
+import Prelude (Unit, discard, show, ($), (<), (<=), (==), (>), (||))
 import Undefined (undefined)
 
 -- data Maybe a = Nothing | Just a
@@ -51,6 +51,13 @@ greaterThanOrEq :: ∀ a. Ord a => a -> a -> Boolean
 greaterThanOrEq x y | x == y = true
 greaterThanOrEq x y | x > y  = true
 greaterThanOrEq _ _          = false
+
+greaterThanOrEq' :: ∀ a. Ord a => a -> a -> Boolean
+greaterThanOrEq' x y =
+  let
+    cmp = compare x y
+  in
+    cmp == GT || cmp == EQ
 
 infixl 4 greaterThanOrEq as >=
 
