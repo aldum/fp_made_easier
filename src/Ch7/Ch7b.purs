@@ -14,15 +14,16 @@ import Effect.Console (log)
 import Undefined (undefined)
 
 test :: Effect Unit
-test = do
-  log $ show $ person
-  log $ show $ toCSV $ person
-  log $ show $ toCSV
-    (Person
-      { name: FullName "Sue Smith"
-      , age: Age 23
-      , occupation: Doctor
-      }) == CSV "Sue Smith,23 years,Doctor"
+test =
+    let testPerson = Person
+            { name: FullName "Sue Smith"
+            , age: Age 23
+            , occupation: Doctor
+            }
+    in
+      do
+        log $ show $ (toCSV testPerson # fromCSV) == Just testPerson
+        log $ show $ (toCSV person # fromCSV) == Just person
 
 person :: Person
 person = Person
