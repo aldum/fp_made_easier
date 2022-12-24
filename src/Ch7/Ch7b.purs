@@ -51,9 +51,13 @@ class FromCSV a where
 
 instance personFromCsv :: FromCSV Person where
   fromCSV (CSV s) = case (split (Pattern ",") s) of
-    [n, a, o] -> case (fromString o) of
-      Just occ ->  case (ParseInt.fromString a) of
-          Just i    -> Just (Person { name: FullName n, age: Age i, occupation: occ })
-          Nothing   -> Nothing
-      Nothing  -> Nothing
+    -- [n, a, o] -> case (fromString o) of
+    --   Just occ ->  case (ParseInt.fromString a) of
+    --       Just i    -> Just (Person { name: FullName n, age: Age i, occupation: occ })
+    --       Nothing   -> Nothing
+    --   Nothing  -> Nothing
+    [n, a, o] -> do
+      age' <- ParseInt.fromString a
+      occ' <- fromString o
+      pure $ Person { name: FullName n, age: Age age', occupation: occ' }
     _ -> Nothing
