@@ -22,7 +22,7 @@ data Person = Person
 -- instance showFullname :: Show FullName where
 --   show = genericShow
 instance showFullname :: Show FullName where
-  show (FullName name) = show name
+  show (FullName name) = name
 
 -- derive instance genericAge :: Generic Age _
 -- instance showAge :: Show Age where

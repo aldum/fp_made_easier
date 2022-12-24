@@ -3,7 +3,7 @@ module Ch7.Ch7b where
 import Ch7.Types
 import Prelude
 
-import Data.Newtype (unwrap)
+import Data.Newtype (class Newtype)
 import Effect (Effect)
 import Effect.Console (log)
 import Undefined (undefined)
@@ -11,6 +11,13 @@ import Undefined (undefined)
 test :: Effect Unit
 test = do
   log $ show $ person
+  log $ show $ toCSV $ person
+  log $ show $ toCSV
+    (Person
+      { name: FullName "Sue Smith"
+      , age: Age 23
+      , occupation: Doctor
+      }) == CSV "Sue Smith,23 years,Doctor"
 
 person :: Person
 person = Person
@@ -20,6 +27,9 @@ person = Person
   }
 
 newtype CSV = CSV String
+derive instance newtypeCSV :: Newtype CSV _
+derive newtype instance eqCSV :: Eq CSV
+derive newtype instance showCSV :: Show CSV
 
 class ToCSV a where
   toCSV :: a -> CSV
