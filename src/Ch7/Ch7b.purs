@@ -3,6 +3,7 @@ module Ch7.Ch7b where
 import Ch7.Types
 import Prelude
 
+import Data.Maybe (Maybe)
 import Data.Newtype (class Newtype)
 import Effect (Effect)
 import Effect.Console (log)
@@ -42,4 +43,4 @@ instance personToCsv :: ToCSV Person where
 
 -- 7.27
 class FromCSV a where
-  fromCSV :: CSV -> a
+  fromCSV :: CSV -> Maybe a
