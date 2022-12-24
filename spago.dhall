@@ -11,6 +11,7 @@ You can edit this file as you like.
     , "newtype"
     , "prelude"
     , "psci-support"
+    , "strings"
     , "tuples"
     , "undefined"
     ]
