@@ -12,12 +12,13 @@ import Undefined (undefined)
 
 -- data Maybe a = Nothing | Just a
 data Option a = None | Some a -- let's Scala this up a bit
-
-someInt :: Option Int
-someInt = Some 1
-
-none :: ∀ a. Option a
-none = None
+-- 7.18
+data Either a b = Left a | Right b
+derive instance eqEither :: (Eq a, Eq b) => Eq (Either a b)
+derive instance ordEither :: (Ord a, Ord b) => Ord (Either a b)
+derive instance genericEither :: Generic (Either a b) _
+instance showEither :: (Show a, Show b) => Show (Either a b) where
+  show = genericShow
 
 test :: Effect Unit
 test = do
