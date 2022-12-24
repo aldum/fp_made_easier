@@ -22,8 +22,8 @@ instance showEither :: (Show a, Show b) => Show (Either a b) where
 
 test :: Effect Unit
 test = do
-  log $ show $ Some "abc" -- ❶ Prints (Some "abc")
-  log $ show $ (None :: Option Unit) -- ❸ Prints None.
+  log $ show (Left "left" :: Either _ Unit) -- COMPILER ERROR!! ❶
+  log $ show (Right (Some 42) :: Either Unit _)
 
 -- 7.12
 -- instance optionShow :: Show a => Show (Option a) where
