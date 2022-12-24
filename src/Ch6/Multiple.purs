@@ -7,6 +7,7 @@ import Data.Maybe (Maybe(..))
 import Data.String as StringUnicode
 import Data.String.CodePoints (CodePoint, codePointFromChar)
 import Data.String.CodeUnits as String
+import Type.Proxy (Proxy(..))
 
 -- 6.12
 class Decapitate collection element where
@@ -29,19 +30,37 @@ instance decapitateStringUnicode :: Decapitate String CodePoint where
 --   Nothing -> Nothing
 
 -- hacky
-genericTail
+genericTailH
   :: ∀ collection element
   . Decapitate collection element
   => element
   -> collection
   -> Maybe collection
-genericTail _ xs =
+genericTailH _ xs =
   case (decapitate xs :: Maybe {head :: element, tail :: collection}) of
     Just { tail } -> Just tail
     Nothing -> Nothing
 
+tH :: Maybe String
+tH = genericTailH 'c' "abc"
+
+tuH :: Maybe String
+tuH = genericTailH (codePointFromChar 'c') "abc"
+
+
+genericTail
+  :: ∀ collection element
+  . Decapitate collection element
+  => Proxy element
+  -> collection
+  -> Maybe collection
+genericTail _ xs = case (decapitate xs :: Maybe {head :: element, tail ::
+collection}) of
+  Just { tail } -> Just tail
+  Nothing -> Nothing
+
 t :: Maybe String
-t = genericTail 'c' "abc"
+t = genericTail (Proxy :: Proxy Char) "abc"
 
 tu :: Maybe String
-tu = genericTail (codePointFromChar 'c') "abc"
+tu = genericTail (Proxy :: Proxy CodePoint) "abc"

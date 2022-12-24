@@ -5,7 +5,7 @@ import Prelude
 import Ch6.Multiple (t, tu)
 import Effect (Effect)
 import Effect.Console (log)
-import Undefined (undefined)
+-- import Undefined (undefined)
 
 main :: Effect Unit
 main = do
