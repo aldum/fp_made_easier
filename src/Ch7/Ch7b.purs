@@ -9,5 +9,7 @@ test :: Effect Unit
 test = do
   log "placeholder"
 
+newtype CSV = CSV String
+
 class ToCSV a where
-  toCSV :: a -> String
+  toCSV :: a -> CSV
