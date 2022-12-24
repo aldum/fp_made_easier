@@ -1,11 +1,13 @@
 module Ch7.Ch7a where
 
 import Data.Eq (class Eq, (==))
-import Data.Ord (class Ord, Ordering(..), compare, (<), (<=), (>))
+import Data.Generic.Rep (class Generic)
+import Data.Ord (class Ord, Ordering(..), compare, (>))
 import Data.Show (class Show, show)
+import Data.Show.Generic (genericShow)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (Unit, discard, ($), (<>), (||))
+import Prelude (Unit, discard, ($), (||))
 import Undefined (undefined)
 
 -- data Maybe a = Nothing | Just a
@@ -26,8 +28,9 @@ test = do
 -- instance optionShow :: Show a => Show (Option a) where
 --   show (Some s) = "Some(" <> show s <> ")"
 --   show None     = "None"
---  derive instance optionShow :: Show a => Show (Option a)
-derive instance optionShow :: Show (Option a)
+derive instance genericOption :: Generic (Option a) _
+instance showOption :: Show a => Show (Option a) where
+  show = genericShow
 
 -- 7.5
 derive instance optionEq :: Eq a => Eq (Option a)
