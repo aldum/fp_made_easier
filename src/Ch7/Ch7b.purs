@@ -7,11 +7,11 @@ import Data.Generic.Rep (from)
 import Data.List (List(..))
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype)
+import Data.Show (class Show)
+import Data.Show.Generic as Show
 import Data.String (Pattern(..), split)
-import Data.Int (fromString) as ParseInt
 import Effect (Effect)
 import Effect.Console (log)
-import Undefined (undefined)
 
 test :: Effect Unit
 test =
@@ -22,8 +22,14 @@ test =
             }
     in
       do
+        log $ show $ (fromCSV $ toCSV testPerson :: Maybe Person)
         log $ show $ (toCSV testPerson # fromCSV) == Just testPerson
+        log $ show $ toCSV person
         log $ show $ (toCSV person # fromCSV) == Just person
+        log $ show $ test2
+
+test2 :: Maybe Person
+test2 = fromCSV (CSV "Jurgen,14 years,Unemployed")
 
 person :: Person
 person = Person
@@ -36,6 +42,9 @@ newtype CSV = CSV String
 derive instance newtypeCSV :: Newtype CSV _
 derive newtype instance eqCSV :: Eq CSV
 derive newtype instance showCSV :: Show CSV
+
+-- derive newtype instance showMaybeCSV :: Show (Maybe CSV)
+
 
 class ToCSV a where
   toCSV :: a -> CSV
@@ -58,7 +67,7 @@ instance personFromCsv :: FromCSV Person where
     --       Nothing   -> Nothing
     --   Nothing  -> Nothing
     [n, a, o] -> do
-      age' <- ParseInt.fromString a
+      age' <- parseAge a
       occ' <- fromString o
-      pure $ Person { name: FullName n, age: Age age', occupation: occ' }
+      pure $ Person { name: FullName n, age: age', occupation: occ' }
     _ -> Nothing
