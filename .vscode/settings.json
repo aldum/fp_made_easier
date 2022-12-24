@@ -1,2 +1,6 @@
 {
+  "purescript.censorWarnings": [
+    "UnusedImport",
+    "ImplicitImport",
+  ]
 }
