@@ -1,10 +1,10 @@
 module Ch7.Types where
 
-import Prelude ((<>))
-
 import Data.Generic.Rep (class Generic)
+import Data.Newtype (class Newtype)
 import Data.Show (class Show, show)
 import Data.Show.Generic (genericShow)
+import Prelude ((<>))
 
 newtype FullName = FullName String
 
@@ -29,6 +29,8 @@ instance showFullname :: Show FullName where
 --   show = genericShow
 instance showAge :: Show Age where
   show (Age n) = show n <> " years"
+-- derive instance newtypeAge :: Newtype Age _
+-- derive newtype instance showAge :: Show Age
 
 derive instance genericOccupation :: Generic Occupation _
 instance showOccupation :: Show Occupation where
