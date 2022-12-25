@@ -6,7 +6,7 @@ import Data.Show (show, class Show)
 import Data.Show.Generic (genericShow)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (Unit, discard, ($))
+import Prelude (Unit, discard, ($), (&&))
 import Undefined (undefined)
 
 test :: Effect Unit
@@ -37,14 +37,14 @@ and :: AndBool -> AndBool -> AndBool
 and AFalse _ = AFalse
 and ATrue  a = a
 
-infixr 3 and as &&
+-- infixr 3 and as &&
 
 appendB :: AndBool -> AndBool -> AndBool
 appendB ATrue ATrue = ATrue
 appendB _     _     = AFalse
 
 instance sgAndBool :: Semigroup AndBool where
-  append a b = a && b
+  append a b = a `and` b
   -- append = appendB
 
 -- 9.9
@@ -70,3 +70,5 @@ verifyAndBoolMonoid = do
 
 monoidL :: AndBool -> Boolean
 monoidL a = a <> mempty == mempty <> a
+monoidL' :: AndBool -> Boolean
+monoidL' a = a <> mempty == a && mempty <> a == a
