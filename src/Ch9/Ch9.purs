@@ -12,3 +12,7 @@ class Semigroup a where
   append :: a -> a -> a
 
 infixr 5 append as <>
+
+-- 9.4
+class Semigroup a <= Monoid a where
+  mempty :: a
