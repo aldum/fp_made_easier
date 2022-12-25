@@ -14,6 +14,7 @@ test = do
   log $ show $ mempty <> ATrue == ATrue -- ❶ Prints true
   log $ show $ mempty <> AFalse == ATrue -- ❷ Prints false
   verifyAndBoolSemigroup
+  verifyAndBoolMonoid
 
 class Semigroup a where
   append :: a -> a -> a
@@ -59,3 +60,13 @@ verifyAndBoolSemigroup = do
 
 semigroupL :: AndBool -> AndBool-> AndBool -> Boolean
 semigroupL a b c = a <> (b <> c) == (a <> b) <> c
+
+-- 9.13
+verifyAndBoolMonoid :: Effect Unit
+verifyAndBoolMonoid = do
+  log "Verifying AndBool Monoid Laws (2 tests)"
+  log $ show $ monoidL ATrue  -- ❶ a • e = e • a = a -- ATrue
+  log $ show $ monoidL AFalse -- ❶ a • e = e • a = a -- AFalse
+
+monoidL :: AndBool -> Boolean
+monoidL a = a <> mempty == mempty <> a
