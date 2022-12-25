@@ -2,16 +2,18 @@ module Ch9.Ch9 where
 
 import Data.Eq (class Eq, (==))
 import Data.Generic.Rep (class Generic)
-import Data.Show.Generic (genericShow)
 import Data.Show (show, class Show)
+import Data.Show.Generic (genericShow)
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (Unit, discard, ($))
+import Undefined (undefined)
 
 test :: Effect Unit
 test = do
   log $ show $ mempty <> ATrue == ATrue -- ❶ Prints true
   log $ show $ mempty <> AFalse == ATrue -- ❷ Prints false
+  verifyAndBoolSemigroup
 
 class Semigroup a where
   append :: a -> a -> a
@@ -47,3 +49,13 @@ instance sgAndBool :: Semigroup AndBool where
 -- 9.9
 instance monoidAndBool :: Monoid AndBool where
   mempty = ATrue
+
+-- 9.11
+verifyAndBoolSemigroup :: Effect Unit
+verifyAndBoolSemigroup = do
+  log "Verifying AndBool Semigroup Laws (1 test)"
+            -- evaluate to true if a • (b • c) = (a • b) • c
+  log $ show $ semigroupL ATrue AFalse ATrue
+
+semigroupL :: AndBool -> AndBool-> AndBool -> Boolean
+semigroupL a b c = a <> (b <> c) == (a <> b) <> c
