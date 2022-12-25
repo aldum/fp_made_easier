@@ -30,3 +30,12 @@ derive instance genericAndBool :: Generic AndBool _
 
 instance showAndBool :: Show AndBool where
   show = genericShow
+
+and :: AndBool -> AndBool -> AndBool
+and AFalse _ = AFalse
+and ATrue  a = a
+
+infixr 3 and as &&
+
+instance sgAndBool :: Semigroup AndBool where
+  append a b = a && b
