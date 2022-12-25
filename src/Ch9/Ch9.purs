@@ -1,6 +1,6 @@
 module Ch9.Ch9 where
 
-import Data.Eq (class Eq)
+import Data.Eq (class Eq, (==))
 import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
 import Data.Show (show, class Show)
@@ -10,9 +10,8 @@ import Prelude (Unit, discard, ($))
 
 test :: Effect Unit
 test = do
-  log $ show $ ATrue <> ATrue -- ❶ Prints ATrue
-  log $ show $ ATrue <> AFalse -- ❷ Prints AFalse
-  log $ show $ AFalse <> AFalse -- ❸ Prints AFalse
+  log $ show $ mempty <> ATrue == ATrue -- ❶ Prints true
+  log $ show $ mempty <> AFalse == ATrue -- ❷ Prints false
 
 class Semigroup a where
   append :: a -> a -> a
@@ -45,3 +44,6 @@ instance sgAndBool :: Semigroup AndBool where
   append a b = a && b
   -- append = appendB
 
+-- 9.9
+instance monoidAndBool :: Monoid AndBool where
+  mempty = ATrue
