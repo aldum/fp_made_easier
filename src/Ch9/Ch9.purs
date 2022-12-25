@@ -37,5 +37,11 @@ and ATrue  a = a
 
 infixr 3 and as &&
 
+appendB :: AndBool -> AndBool -> AndBool
+appendB ATrue ATrue = ATrue
+appendB _     _     = AFalse
+
 instance sgAndBool :: Semigroup AndBool where
   append a b = a && b
+  -- append = appendB
+
