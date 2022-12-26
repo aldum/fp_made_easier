@@ -4,6 +4,7 @@ import Data.Eq (class Eq, (==))
 import Data.Generic.Rep (class Generic)
 import Data.Show (show, class Show)
 import Data.Show.Generic (genericShow)
+-- import Data.String (instance Semigroup)
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (Unit, discard, ($), (&&))
@@ -15,6 +16,9 @@ test = do
   log $ show $ mempty <> AFalse == ATrue -- ❷ Prints false
   verifyAndBoolSemigroup
   verifyAndBoolMonoid
+  verifyOrBoolSemigroup
+  verifyOrBoolMonoid
+
 
 class Semigroup a where
   append :: a -> a -> a
@@ -57,7 +61,7 @@ verifyAndBoolSemigroup = do
             -- evaluate to true if a • (b • c) = (a • b) • c
   log $ show $ semigroupL ATrue AFalse ATrue
 
-semigroupL :: AndBool -> AndBool-> AndBool -> Boolean
+semigroupL :: ∀ a. Monoid a => Eq a => a -> a-> a -> Boolean
 semigroupL a b c = a <> (b <> c) == (a <> b) <> c
 
 -- 9.13
@@ -67,7 +71,7 @@ verifyAndBoolMonoid = do
   log $ show $ monoidL ATrue  -- ❶ a • e = e • a = a -- ATrue
   log $ show $ monoidL AFalse -- ❶ a • e = e • a = a -- AFalse
 
-monoidL :: AndBool -> Boolean
+monoidL :: ∀ a. Monoid a => Eq a => a -> Boolean
 monoidL a = a <> mempty == mempty <> a
 monoidL' :: AndBool -> Boolean
 monoidL' a = a <> mempty == a && mempty <> a == a
@@ -86,3 +90,16 @@ instance sgOrBool :: Semigroup OrBool where
 
 instance monoidOrBool :: Monoid OrBool where
   mempty = OFalse
+
+-- 9.17
+verifyOrBoolSemigroup :: Effect Unit
+verifyOrBoolSemigroup = do
+  log "Verifying OrBool Semigroup Laws (1 test)"
+            -- evaluate to true if a • (b • c) = (a • b) • c
+  log $ show $ semigroupL OTrue OFalse OTrue
+
+verifyOrBoolMonoid :: Effect Unit
+verifyOrBoolMonoid = do
+  log "Verifying OrBool Monoid Laws (2 tests)"
+  log $ show $ monoidL OTrue
+  log $ show $ monoidL OFalse
