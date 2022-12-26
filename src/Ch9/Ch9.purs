@@ -29,7 +29,6 @@ class Semigroup a <= Monoid a where
 data AndBool = AFalse | ATrue
 derive instance eqAndBool :: Eq AndBool
 derive instance genericAndBool :: Generic AndBool _
-
 instance showAndBool :: Show AndBool where
   show = genericShow
 
@@ -72,3 +71,18 @@ monoidL :: AndBool -> Boolean
 monoidL a = a <> mempty == mempty <> a
 monoidL' :: AndBool -> Boolean
 monoidL' a = a <> mempty == a && mempty <> a == a
+
+
+-- 9.15
+data OrBool = OFalse | OTrue
+derive instance eqOrBool :: Eq OrBool
+derive instance genericOrBool :: Generic OrBool _
+instance showOrBool :: Show OrBool where
+  show = genericShow
+
+instance sgOrBool :: Semigroup OrBool where
+  append OFalse a = a
+  append OTrue  _ = OTrue
+
+instance monoidOrBool :: Monoid OrBool where
+  mempty = OFalse
