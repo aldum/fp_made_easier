@@ -2,7 +2,7 @@ module Ch9.Ch9 where
 
 import Data.Eq (class Eq, (==))
 import Data.Generic.Rep (class Generic)
-import Data.Maybe (Maybe)
+import Data.Maybe (Maybe(..))
 import Data.Show (show, class Show)
 import Data.Show.Generic (genericShow)
 import Effect (Effect)
@@ -169,3 +169,12 @@ verifyMod4Monoid = do
 -- 9.36
 newtype First a = First (Maybe a)
 newtype Last a = Last (Maybe a)
+
+-- 9.37
+instance sgFirst :: Semigroup (First (Maybe a)) where
+  append (First Nothing) b = b
+  append a (First Nothing) = a
+  append a        _        = a
+
+instance monFirst :: Monoid (First (Maybe a)) where
+  mempty = First Nothing
