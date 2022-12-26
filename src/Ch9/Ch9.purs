@@ -173,7 +173,7 @@ newtype Last a = Last (Maybe a)
 -- 9.37
 instance sgFirst :: Semigroup (First (Maybe a)) where
   append (First Nothing) b = b
-  append a (First Nothing) = a
+  -- append a (First Nothing) = a -- no need
   append a        _        = a
 
 instance monFirst :: Monoid (First (Maybe a)) where
