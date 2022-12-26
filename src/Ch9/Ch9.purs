@@ -12,12 +12,9 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ mempty <> ATrue == ATrue -- ❶ Prints true
-  log $ show $ mempty <> AFalse == ATrue -- ❷ Prints false
-  verifyAndBoolSemigroup
-  verifyAndBoolMonoid
-  verifyOrBoolSemigroup
-  verifyOrBoolMonoid
+  log $ show $ Zero
+  log $ show $ Zero == One
+  log $ show $ Two  == Two
 
 
 class Semigroup a where
@@ -142,3 +139,9 @@ instance gMod4 :: Group Mod4 where
 class Semigroup g <= Commutative g
 
 instance commutativeMod4 :: Commutative Mod4
+
+-- 9.30
+derive instance eqMod4 :: Eq Mod4
+derive instance genericMod4 :: Generic Mod4 _
+instance showMod4 :: Show Mod4 where
+  show = genericShow
