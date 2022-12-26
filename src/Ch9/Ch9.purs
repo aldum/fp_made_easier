@@ -103,3 +103,9 @@ verifyOrBoolMonoid = do
   log "Verifying OrBool Monoid Laws (2 tests)"
   log $ show $ monoidL OTrue
   log $ show $ monoidL OFalse
+
+-- 9.19
+data Mod4 = Zero
+          | One
+          | Two
+          | Three
