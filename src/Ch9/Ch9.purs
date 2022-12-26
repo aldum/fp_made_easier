@@ -137,3 +137,8 @@ instance gMod4 :: Group Mod4 where
   ginverse One   = Three
   ginverse Two   = Two
   ginverse Three = One
+
+-- 9.29
+class Semigroup g <= Commutative g
+
+instance commutativeMod4 :: Commutative Mod4
