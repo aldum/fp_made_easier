@@ -15,6 +15,8 @@ test = do
   log $ show $ Zero
   log $ show $ Zero == One
   log $ show $ Two  == Two
+  verifyMod4Semigroup
+  verifyMod4Monoid
 
 
 class Semigroup a where
@@ -145,3 +147,20 @@ derive instance eqMod4 :: Eq Mod4
 derive instance genericMod4 :: Generic Mod4 _
 instance showMod4 :: Show Mod4 where
   show = genericShow
+
+-- 9.32
+verifyMod4Semigroup :: Effect Unit
+verifyMod4Semigroup = do
+  log "Verifying Mod4 Semigroup Laws (3 tests)"
+            -- evaluate to true if a • (b • c) = (a • b) • c
+  log $ show $ semigroupL Two One Two
+  log $ show $ semigroupL Zero Three One
+  log $ show $ semigroupL Three One Two
+
+verifyMod4Monoid :: Effect Unit
+verifyMod4Monoid = do
+  log "Verifying Mod4 Monoid Laws (4 tests)"
+  log $ show $ monoidL Zero
+  log $ show $ monoidL One
+  log $ show $ monoidL Two
+  log $ show $ monoidL Three
