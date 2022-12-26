@@ -2,9 +2,9 @@ module Ch9.Ch9 where
 
 import Data.Eq (class Eq, (==))
 import Data.Generic.Rep (class Generic)
+import Data.Maybe (Maybe)
 import Data.Show (show, class Show)
 import Data.Show.Generic (genericShow)
-
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (Unit, discard, ($), (&&))
@@ -164,3 +164,8 @@ verifyMod4Monoid = do
   log $ show $ monoidL One
   log $ show $ monoidL Two
   log $ show $ monoidL Three
+
+
+-- 9.36
+newtype First a = First (Maybe a)
+newtype Last a = Last (Maybe a)
