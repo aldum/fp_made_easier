@@ -178,3 +178,11 @@ instance sgFirst :: Semigroup (First (Maybe a)) where
 
 instance monFirst :: Monoid (First (Maybe a)) where
   mempty = First Nothing
+
+-- 9.38
+instance sgLast :: Semigroup (Last (Maybe a)) where
+  append a (Last Nothing) = a
+  append _              b = b
+
+instance monLast :: Monoid (Last (Maybe a)) where
+  mempty = Last Nothing
