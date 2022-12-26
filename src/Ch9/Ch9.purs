@@ -4,7 +4,7 @@ import Data.Eq (class Eq, (==))
 import Data.Generic.Rep (class Generic)
 import Data.Show (show, class Show)
 import Data.Show.Generic (genericShow)
--- import Data.String (instance Semigroup)
+
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (Unit, discard, ($), (&&))
@@ -131,3 +131,9 @@ instance monMod4 :: Monoid Mod4 where
 class Semigroup a <= Group a where
   ginverse :: a -> a
 
+-- 9.28
+instance gMod4 :: Group Mod4 where
+  ginverse Zero  = Zero
+  ginverse One   = Three
+  ginverse Two   = Two
+  ginverse Three = One
