@@ -126,3 +126,8 @@ instance sgMod4 :: Semigroup Mod4 where
 
 instance monMod4 :: Monoid Mod4 where
   mempty = Zero
+
+-- 9.26
+class Semigroup a <= Group a where
+  ginverse :: a -> a
+
