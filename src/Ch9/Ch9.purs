@@ -5,24 +5,26 @@ import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(..))
 import Data.Show (show, class Show)
 import Data.Show.Generic (genericShow)
+-- import Data.String as String
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (Unit, discard, ($), (&&))
+-- import Prelude (append) as P
 import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ Zero
-  log $ show $ Zero == One
-  log $ show $ Two  == Two
-  verifyMod4Semigroup
-  verifyMod4Monoid
+  -- log $ show $ First Nothing <> First (Just 77) -- ❶ Prints (First (Just 77))
+  -- log $ show $ Last (Just 1) <> Last (Just 99) -- ❷ Prints (Last (Just 99))
+  log "?"
 
 
 class Semigroup a where
   append :: a -> a -> a
 
 infixr 5 append as <>
+
+-- infixr 5 P.append as ++
 
 -- 9.4
 class Semigroup a <= Monoid a where
@@ -186,3 +188,16 @@ instance sgLast :: Semigroup (Last (Maybe a)) where
 
 instance monLast :: Monoid (Last (Maybe a)) where
   mempty = Last Nothing
+
+-- 9.40
+derive instance genericFirst :: Generic (First a) _
+instance showFirst :: Show a => Show (First a) where
+  show = genericShow
+-- instance showFirst :: Show a => Show (First a) where
+--   show (First m) = "First" ++ show m
+-- instance showFirstM :: Show a => Show (First (Maybe a)) where
+--   show (First m) = "First" ++ show m
+
+derive instance genericLast :: Generic (Last a) _
+instance showLast :: Show a => Show (Last a) where
+  show = genericShow
