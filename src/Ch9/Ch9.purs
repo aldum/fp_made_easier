@@ -96,7 +96,7 @@ verifyOrBoolSemigroup :: Effect Unit
 verifyOrBoolSemigroup = do
   log "Verifying OrBool Semigroup Laws (1 test)"
             -- evaluate to true if a • (b • c) = (a • b) • c
-  log $ show $ semigroupL OTrue OFalse OTrue
+  log $ show $ semigroupL OFalse OTrue OTrue
 
 verifyOrBoolMonoid :: Effect Unit
 verifyOrBoolMonoid = do
