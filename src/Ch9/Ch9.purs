@@ -109,3 +109,20 @@ data Mod4 = Zero
           | One
           | Two
           | Three
+
+-- 9.21
+instance sgMod4 :: Semigroup Mod4 where
+  append Zero m      = m
+  append m    Zero   = m
+  append One  Three  = Zero
+  append One  One    = Two
+  append One  Two    = Three
+  append Two  One    = Three
+  append Two  Two    = Zero
+  append Two  Three  = One
+  append Three One   = Zero
+  append Three Two   = One
+  append Three Three = Two
+
+instance monMod4 :: Monoid Mod4 where
+  mempty = Zero
