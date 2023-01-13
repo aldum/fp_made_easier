@@ -15,8 +15,8 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ sum (1 : 2 : 3 : Nil) -- ❶ Prints 6.
-  log $ show $ sum (1 : (-2) : 3 : Nil) -- Prints 2.
+  log $ show $ sumF (1 : 2 : 3 : Nil) -- ❶ Prints 6.
+  log $ show $ sumF (1 : (-2) : 3 : Nil) -- Prints 2.
 
 -- 11.1
 reverse :: List ~> List
@@ -107,3 +107,7 @@ sum'' = go 0
   where
     go acc Nil      = acc
     go acc (x : xs) = go (acc + x) xs
+
+-- 11.20
+sumF :: List Int -> Int
+sumF = foldl (+) 0
