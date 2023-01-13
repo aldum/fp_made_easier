@@ -6,7 +6,6 @@ import Data.List.Types (NonEmptyList(..))
 import Data.Maybe (Maybe(..))
 import Data.NonEmpty (NonEmpty(..), (:|))
 import Data.Ord (class Ord, (<), (>))
-import Data.Semigroup.Foldable (foldl1)
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (type (~>), Unit, discard, negate, otherwise, show, ($))
@@ -82,3 +81,7 @@ findMaxNE' = foldl1 max
 
 findMaxNEb :: ∀ a. Ord a => NonEmptyList a -> a
 findMaxNEb (NonEmptyList ne) = foldl1 max ne
+
+-- 11.15
+foldl1 :: ∀ f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
+foldl1 folder (NonEmpty first rest) = foldl folder first rest
