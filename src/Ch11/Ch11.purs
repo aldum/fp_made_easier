@@ -101,3 +101,9 @@ sum l = go 0 l
 sum' :: List Int -> Int
 sum' Nil = 0
 sum' (x : xs) = x + sum xs
+
+sum'' :: List Int -> Int
+sum'' = go 0
+  where
+    go acc Nil      = acc
+    go acc (x : xs) = go (acc + x) xs
