@@ -1,10 +1,10 @@
 module Ch11.Ch11 where
 
 import Data.List (List(..), (:), foldl)
-import Data.Ord (class Ord, (<))
+import Data.Ord (class Ord, (<), (>))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), discard, negate, Unit, show, ($))
+import Prelude (type (~>), Unit, discard, negate, otherwise, show, ($))
 import Undefined (undefined)
 
 
@@ -26,3 +26,7 @@ reverse =
 max :: ∀ a. (Ord a) => a -> a -> a
 max x y | x < y = y
 max x _ = x
+
+maxB :: ∀ a. Ord a => a -> a -> a
+maxB x y | x > y = x
+         | otherwise = y
