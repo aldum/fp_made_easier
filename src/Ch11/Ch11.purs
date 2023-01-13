@@ -85,3 +85,6 @@ findMaxNEb (NonEmptyList ne) = foldl1 max ne
 -- 11.15
 foldl1 :: ∀ f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 folder (NonEmpty first rest) = foldl folder first rest
+
+foldl1' :: ∀ f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
+foldl1' f (x :| xs) = foldl f x xs
