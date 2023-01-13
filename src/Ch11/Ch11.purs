@@ -47,3 +47,8 @@ findMax = go Nothing
         Nothing -> go (Just x) xs
         Just  m -> go (Just (max x m)) xs
 
+findMaxB :: ∀ a. Ord a => List a -> Maybe a
+findMaxB Nil = Nothing
+findMaxB l@(first : _) = Just $ go first l where
+  go mx Nil = mx
+  go mx (x : xs) = go (max x mx) xs
