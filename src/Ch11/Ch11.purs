@@ -7,6 +7,7 @@ import Data.List.Types (NonEmptyList(..))
 import Data.Maybe (Maybe(..))
 import Data.NonEmpty (NonEmpty(..), (:|))
 import Data.Ord (class Ord, (<), (>))
+import Data.Semiring (class Semiring, zero)
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (type (~>), Unit, discard, negate, otherwise, show, ($), (+))
@@ -16,7 +17,7 @@ import Undefined (undefined)
 test :: Effect Unit
 test = do
   log $ show $ sumF (1 : 2 : 3 : Nil) -- ❶ Prints 6.
-  log $ show $ sumF (1 : (-2) : 3 : Nil) -- Prints 2.
+  log $ show $ sumF (33.23 : -11.0 : Nil) -- Prints ~22.23
 
 -- 11.1
 reverse :: List ~> List
@@ -109,5 +110,9 @@ sum'' = go 0
     go acc (x : xs) = go (acc + x) xs
 
 -- 11.20
-sumF :: List Int -> Int
-sumF = foldl (+) 0
+sumF' :: List Int -> Int
+sumF' = foldl (+) 0
+
+-- sumF :: List Number -> Number
+sumF ∷ forall a. Semiring a => List a → a
+sumF = foldl (+) zero
