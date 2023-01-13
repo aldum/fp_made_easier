@@ -16,8 +16,10 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ sumF (1 : 2 : 3 : Nil) -- ❶ Prints 6.
-  log $ show $ sumF (33.23 : -11.0 : Nil) -- Prints ~22.23
+  log $ show $ sum [1, 2, 3] -- ❶ Prints 6.
+  log $ show $ sum [1.0, 2.0, 3.0] -- ❷ Prints 6.0.
+  log $ show $ sum [1.0, (-2.0), 3.0] -- ❷ Prints 2.0.
+
 
 -- 11.1
 reverse :: List ~> List
@@ -114,5 +116,5 @@ sumF' :: List Int -> Int
 sumF' = foldl (+) 0
 
 -- sumF :: List Number -> Number
-sumF ∷ forall a. Semiring a => List a → a
+sumF ∷ ∀ f a. Foldable f => Semiring a => f a → a
 sumF = foldl (+) zero
