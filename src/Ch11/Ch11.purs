@@ -15,8 +15,8 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ findMaxNE (NonEmptyList $ 37 :| (311 : -1 : 2 : 84 : Nil)) -- ❶ Prints 311.
-  log $ show $ findMaxNE (NonEmptyList $ "a" :| ("bbb" : "c" : Nil)) -- ❷ Prints "c"
+  log $ show $ findMaxNEb (NonEmptyList $ 37 :| (311 : -1 : 2 : 84 : Nil)) -- ❶ Prints 311.
+  log $ show $ findMaxNEb (NonEmptyList $ "a" :| ("bbb" : "c" : Nil)) -- ❷ Prints "c"
 
 -- 11.1
 reverse :: List ~> List
@@ -77,6 +77,8 @@ findMaxNE :: ∀ a. Ord a => NonEmptyList a ->  a
 findMaxNE (NonEmptyList (NonEmpty first l)) = foldl max first l
 
 -- 11.13
-
 findMaxNE' :: ∀ t14 a. Foldable t14 => Ord a => NonEmpty t14 a -> a
 findMaxNE' = foldl1 max
+
+findMaxNEb :: ∀ a. Ord a => NonEmptyList a -> a
+findMaxNEb (NonEmptyList ne) = foldl1 max ne
