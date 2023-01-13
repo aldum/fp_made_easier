@@ -1,8 +1,10 @@
 module Ch11.Ch11 where
 
 import Data.List (List(..), (:), foldl)
-import Data.Ord (class Ord, (<), (>))
+import Data.List.Types (NonEmptyList(..))
 import Data.Maybe (Maybe(..))
+import Data.NonEmpty (NonEmpty(..), (:|))
+import Data.Ord (class Ord, (<), (>))
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (type (~>), Unit, discard, negate, otherwise, show, ($))
@@ -11,8 +13,8 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ findMax (37 : 311 : -1 : 2 : 84 : Nil) -- ❶ Prints 311.
-  log $ show $ findMax ("a" : "bbb" : "c" : Nil) -- ❷ Prints "c".
+  log $ show $ findMaxNE (NonEmptyList $ 37 :| (311 : -1 : 2 : 84 : Nil)) -- ❶ Prints 311.
+  log $ show $ findMaxNE (NonEmptyList $ "a" :| ("bbb" : "c" : Nil)) -- ❷ Prints "c".
 
 -- 11.1
 reverse :: List ~> List
@@ -68,3 +70,6 @@ findMax = foldl op Nothing
 findMaxFB :: ∀ a. Ord a => List a -> Maybe a
 findMaxFB Nil = Nothing
 findMaxFB l@(first : _) = Just $ foldl max first l
+
+findMaxNE :: ∀ a. Ord a => NonEmptyList a ->  a
+findMaxNE (NonEmptyList (NonEmpty first l)) = foldl max first l
