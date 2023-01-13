@@ -2,6 +2,7 @@ module Ch11.Ch11 where
 
 import Data.List (List(..), (:), foldl)
 import Data.Ord (class Ord, (<), (>))
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (type (~>), Unit, discard, negate, otherwise, show, ($))
@@ -10,8 +11,8 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ findMax 0 (37 : 311 : -1 : 2 : 84 : Nil) -- ❶ Prints 311.
-  log $ show $ findMax "" ("a" : "bbb" : "c" : Nil) -- ❷ Prints "c".
+  log $ show $ findMax (37 : 311 : -1 : 2 : 84 : Nil) -- ❶ Prints 311.
+  log $ show $ findMax ("a" : "bbb" : "c" : Nil) -- ❷ Prints "c".
 
 -- 11.1
 reverse :: List ~> List
@@ -32,6 +33,17 @@ maxB x y | x > y = x
          | otherwise = y
 
 -- 11.6
-findMax :: ∀ a. Ord a => a -> List a -> a
-findMax acc Nil = acc
-findMax acc (x : xs) = findMax (max acc x) xs
+findMax' :: ∀ a. Ord a => a -> List a -> a
+findMax' acc Nil = acc
+findMax' acc (x : xs) = findMax' (max acc x) xs
+
+-- 11.8
+findMax :: ∀ a. Ord a => List a -> Maybe a
+findMax = go Nothing
+  where
+    go macc Nil = macc
+    go macc (x : xs) =
+      case macc of
+        Nothing -> go (Just x) xs
+        Just  m -> go (Just (max x m)) xs
+
