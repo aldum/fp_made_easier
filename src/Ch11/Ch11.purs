@@ -10,8 +10,8 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
-  log $ show $ max (-1) 99 -- ❶ Prints 99
-  log $ show $ max "aa" "z" -- ❷ Prints "z"
+  log $ show $ findMax 0 (37 : 311 : -1 : 2 : 84 : Nil) -- ❶ Prints 311.
+  log $ show $ findMax "" ("a" : "bbb" : "c" : Nil) -- ❷ Prints "c".
 
 -- 11.1
 reverse :: List ~> List
@@ -30,3 +30,8 @@ max x _ = x
 maxB :: ∀ a. Ord a => a -> a -> a
 maxB x y | x > y = x
          | otherwise = y
+
+-- 11.6
+findMax :: ∀ a. Ord a => a -> List a -> a
+findMax acc Nil = acc
+findMax acc (x : xs) = findMax (max acc x) xs
