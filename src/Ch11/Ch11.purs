@@ -63,3 +63,8 @@ findMax = foldl op Nothing
       case mx of
         Nothing -> Just n
         Just  m -> Just (max m n)
+
+-- 11.11
+findMaxFB :: ∀ a. Ord a => List a -> Maybe a
+findMaxFB Nil = Nothing
+findMaxFB l@(first : _) = Just $ foldl (\curMax e -> max curMax e) first l
