@@ -12,4 +12,9 @@ test = do
   log $ show $ reverse (10 : 20 : 30 : Nil) -- Prints (30 : 20 : 10 : Nil)
 
 reverse :: List ~> List
-reverse = undefined
+reverse =
+  let
+    folder = \rl x -> x : rl
+    starter = Nil
+  in
+    foldl folder starter
