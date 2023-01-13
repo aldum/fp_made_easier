@@ -18,6 +18,7 @@ test = do
 reverse :: List ~> List
 reverse =
   let
+    folder :: ∀ a. List a -> a -> List a
     folder = \rl x -> x : rl
     starter = Nil
   in
@@ -38,8 +39,8 @@ findMax' acc Nil = acc
 findMax' acc (x : xs) = findMax' (max acc x) xs
 
 -- 11.8
-findMax :: ∀ a. Ord a => List a -> Maybe a
-findMax = go Nothing
+findMax'' :: ∀ a. Ord a => List a -> Maybe a
+findMax'' = go Nothing
   where
     go macc Nil = macc
     go macc (x : xs) =
@@ -52,3 +53,13 @@ findMaxB Nil = Nothing
 findMaxB l@(first : _) = Just $ go first l where
   go mx Nil = mx
   go mx (x : xs) = go (max x mx) xs
+
+-- 11.9
+findMax :: ∀ a. Ord a => List a -> Maybe a
+findMax = foldl op Nothing
+  where
+    op :: Maybe a -> a -> Maybe a
+    op mx n =
+      case mx of
+        Nothing -> Just n
+        Just  m -> Just (max m n)
