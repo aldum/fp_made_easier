@@ -1,5 +1,6 @@
 module Ch11.Ch11 where
 
+import Ch9.Ch9 (class Semigroup)
 import Data.Foldable (class Foldable)
 import Data.List (List(..), (:), foldl)
 import Data.List.Types (NonEmptyList(..))
@@ -8,14 +9,14 @@ import Data.NonEmpty (NonEmpty(..), (:|))
 import Data.Ord (class Ord, (<), (>))
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), Unit, discard, negate, otherwise, show, ($))
+import Prelude (type (~>), Unit, discard, negate, otherwise, show, ($), (+))
 import Undefined (undefined)
 
 
 test :: Effect Unit
 test = do
-  log $ show $ findMaxNEb (NonEmptyList $ 37 :| (311 : -1 : 2 : 84 : Nil)) -- ❶ Prints 311.
-  log $ show $ findMaxNEb (NonEmptyList $ "a" :| ("bbb" : "c" : Nil)) -- ❷ Prints "c"
+  log $ show $ sum (1 : 2 : 3 : Nil) -- ❶ Prints 6.
+  log $ show $ sum (1 : (-2) : 3 : Nil) -- Prints 2.
 
 -- 11.1
 reverse :: List ~> List
@@ -88,3 +89,11 @@ foldl1 folder (NonEmpty first rest) = foldl folder first rest
 
 foldl1' :: ∀ f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
 foldl1' f (x :| xs) = foldl f x xs
+
+-- 11.18
+sum :: List Int -> Int
+sum Nil = 0
+sum l = go 0 l
+  where
+    go acc Nil = acc
+    go acc (x : xs) = go (acc + x) xs
