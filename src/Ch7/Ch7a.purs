@@ -14,6 +14,7 @@ import Undefined (undefined)
 data Option a = None | Some a -- let's Scala this up a bit
 -- 7.18
 data Either a b = Left a | Right b
+
 derive instance eqEither :: (Eq a, Eq b) => Eq (Either a b)
 derive instance ordEither :: (Ord a, Ord b) => Ord (Either a b)
 derive instance genericEither :: Generic (Either a b) _
@@ -22,9 +23,11 @@ instance showEither :: (Show a, Show b) => Show (Either a b) where
 
 test :: Effect Unit
 test =
-  let x = Left "left" :: MyEitherVar
-      y :: MyEitherVar
-      y = Right $ Some 41
+  let
+    x = Left "left" :: MyEitherVar
+
+    y :: MyEitherVar
+    y = Right $ Some 41
   in
     do
       log $ show x
@@ -48,6 +51,7 @@ derive instance optionEq :: Eq a => Eq (Option a)
 --   eq _         _         = false
 
 derive instance optionOrd :: Ord a => Ord (Option a)
+
 -- instance optionOrd :: Ord a => Ord (Option a) where
 --   -- compare o1 o2 = undefined
 --   compare None     None     = EQ
@@ -55,11 +59,10 @@ derive instance optionOrd :: Ord a => Ord (Option a)
 --   compare (Some _) None     = GT
 --   compare (Some a) (Some b) = a `compare` b
 
-
 greaterThanOrEq :: ∀ a. Ord a => a -> a -> Boolean
 greaterThanOrEq x y | x == y = true
-greaterThanOrEq x y | x > y  = true
-greaterThanOrEq _ _          = false
+greaterThanOrEq x y | x > y = true
+greaterThanOrEq _ _ = false
 
 greaterThanOrEq' :: ∀ a. Ord a => a -> a -> Boolean
 greaterThanOrEq' x y =
@@ -69,4 +72,3 @@ greaterThanOrEq' x y =
     cmp == GT || cmp == EQ
 
 infixl 4 greaterThanOrEq as >=
-
