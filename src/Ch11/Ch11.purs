@@ -1,6 +1,6 @@
 module Ch11.Ch11 where
 
-import Data.Foldable (class Foldable, foldl, foldr)
+import Data.Foldable (class Foldable, foldMap, foldl, foldr)
 import Data.List (List(..), singleton, (:))
 import Data.List.Types (NonEmptyList(..))
 import Data.Maybe (Maybe(..))
@@ -141,24 +141,27 @@ exTree =
 
 instance foldTree :: Foldable Tree where
   -- foldr :: ∀ a b. (a -> b -> b) -> b -> f a -> b
-  foldr op acc (Leaf v) = v `op` acc
-  foldr op acc (Node lt rt) =
-    foldr op left rt
-    where
-    left = foldr op acc lt
+  foldr op acc t = foldr op acc (toList t)
+  -- foldr op acc (Leaf v) = v `op` acc
+  -- foldr op acc (Node lt rt) =
+  --   foldr op left rt
+  --   where
+  --   left = foldr op acc lt
 
   -- foldl :: forall a b. (b -> a -> b) -> b -> f a -> b
-  foldl op acc (Leaf v) = acc `op` v
-  foldl op acc (Node lt rt) =
-    foldl op left rt
-    where
-    left = (foldl op acc lt)
+  foldl op acc t = foldl op acc (toList t)
+  -- foldl op acc (Leaf v) = acc `op` v
+  -- foldl op acc (Node lt rt) =
+  --   foldl op left rt
+  --   where
+  --   left = (foldl op acc lt)
 
+  -- foldMap m (Leaf v) = m v
+  -- foldMap m t = foldl lift mempty t
+  --   where
+  --   lift acc tr = acc <> m tr
   -- foldMap :: forall a m. Monoid m => (a -> m) -> f a -> m
-  foldMap m (Leaf v) = m v
-  foldMap m t = foldl lift mempty t
-    where
-    lift acc tr = acc <> m tr
+  foldMap m t = foldMap m (toList t)
 
 toList :: Tree ~> List
 toList (Leaf l) = singleton l
