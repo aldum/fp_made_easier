@@ -17,7 +17,7 @@ import Undefined (undefined)
 test :: Effect Unit
 test = do
   -- ❷ Prints (5 : -1 : 14 : 99 : Nil).
-  logShow $ toList exTree
+  logShow $ sum $ toList exTree
 
   logShow $ sumF exTree
   logShow $ foldr (+) zero exTree
