@@ -11,7 +11,17 @@ import Data.Semigroup (class Semigroup)
 import Data.Semiring (class Semiring, zero)
 import Effect (Effect)
 import Effect.Console (logShow)
-import Prelude (type (~>), Unit, discard, mempty, negate, otherwise, ($), (+), (-))
+import Prelude
+  ( type (~>)
+  , Unit
+  , discard
+  , negate
+  , otherwise
+  , ($)
+  , (+)
+  , (-)
+  , (<<<)
+  )
 import Undefined (undefined)
 
 test :: Effect Unit
@@ -141,7 +151,7 @@ exTree =
 
 instance foldTree :: Foldable Tree where
   -- foldr :: ∀ a b. (a -> b -> b) -> b -> f a -> b
-  foldr op acc t = foldr op acc (toList t)
+  foldr op acc = foldr op acc <<< toList
   -- foldr op acc (Leaf v) = v `op` acc
   -- foldr op acc (Node lt rt) =
   --   foldr op left rt
@@ -149,7 +159,7 @@ instance foldTree :: Foldable Tree where
   --   left = foldr op acc lt
 
   -- foldl :: forall a b. (b -> a -> b) -> b -> f a -> b
-  foldl op acc t = foldl op acc (toList t)
+  foldl op acc = foldl op acc <<< toList
   -- foldl op acc (Leaf v) = acc `op` v
   -- foldl op acc (Node lt rt) =
   --   foldl op left rt
@@ -161,7 +171,7 @@ instance foldTree :: Foldable Tree where
   --   where
   --   lift acc tr = acc <> m tr
   -- foldMap :: forall a m. Monoid m => (a -> m) -> f a -> m
-  foldMap m t = foldMap m (toList t)
+  foldMap m = foldMap m <<< toList
 
 toList :: Tree ~> List
 toList (Leaf l) = singleton l
