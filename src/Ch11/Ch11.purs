@@ -1,7 +1,7 @@
 module Ch11.Ch11 where
 
 import Data.Foldable (class Foldable, foldl, foldr)
-import Data.List (List(..), (:))
+import Data.List (List(..), singleton, (:))
 import Data.List.Types (NonEmptyList(..))
 import Data.Maybe (Maybe(..))
 import Data.Monoid ((<>))
@@ -16,6 +16,9 @@ import Undefined (undefined)
 
 test :: Effect Unit
 test = do
+  -- ❷ Prints (5 : -1 : 14 : 99 : Nil).
+  logShow $ toList exTree
+
   logShow $ sumF exTree
   logShow $ foldr (+) zero exTree
   logShow $ foldl (-) zero exTree
@@ -156,3 +159,7 @@ instance foldTree :: Foldable Tree where
   foldMap m t = foldl lift mempty t
     where
     lift acc tr = acc <> m tr
+
+toList :: Tree ~> List
+toList (Leaf l) = singleton l
+toList (Node lt rt) = toList lt <> toList rt
