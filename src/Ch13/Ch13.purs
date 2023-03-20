@@ -54,6 +54,18 @@ instance showTuple :: (Show a, Show b) => Show (Tuple a b) where
 instance tf :: Functor (Tuple a) where
   map f (Tuple a b) = Tuple a (f b)
 
+-- 13.7
+
+data Threeple a b c = Threeple a b c
+
+derive instance genericThreeple :: Generic (Threeple a b c) _
+instance showThreeple :: (Show a, Show b, Show c) => Show (Threeple a b c) where
+  show = genericShow
+
+instance t3f :: Functor (Threeple a b) where
+  map f (Threeple a b c) = Threeple a b $ f c
+
 test :: Effect Unit
 test = do
-  log $ show $ (_ / 2) <$> Tuple 10 20 -- ❶ Prints (Tuple 10 10)
+  log $ show $ (_ / 2) <$> Threeple 10 20 40 -- ❶ Prints (Threeple 10 20 20).
+  log $ "Done"
