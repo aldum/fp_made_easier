@@ -35,14 +35,15 @@ derive instance genericEither :: Generic (Either a b) _
 --   show = genericShow
 
 instance showEither :: (Show l, Show r) => Show (Either l r) where
-  show (Left l) = "(Left" <> show l <> ")"
-  show (Right r) = "(Right" <> show r <> ")"
+  show (Left l) = "(Left " <> show l <> ")"
+  show (Right r) = "(Right " <> show r <> ")"
 
 instance ef :: Functor (Either l) where
-  map f (Right v) = Right $ f v
+  -- map _ left = left
   map _ (Left e) = Left e
+  map f (Right v) = Right $ f v
 
 test :: Effect Unit
 test = do
-  log $ show $ (_ / 2) <$> (Right 10 :: Either String Int) -- ❶Prints (Right 5).
+  log $ show $ (_ / 2) <$> (Right 10 :: Either Unit _) -- ❶Prints (Right 5).
   log $ show $ (_ / 2) <$> Left "error reason" -- ❷Prints (Left "error reason")
