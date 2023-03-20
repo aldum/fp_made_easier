@@ -43,7 +43,17 @@ instance ef :: Functor (Either l) where
   map _ (Left e) = Left e
   map f (Right v) = Right $ f v
 
+-- 13.5
+
+data Tuple a b = Tuple a b
+
+derive instance genericTuple :: Generic (Tuple a b) _
+instance showTuple :: (Show a, Show b) => Show (Tuple a b) where
+  show = genericShow
+
+instance tf :: Functor (Tuple a) where
+  map f (Tuple a b) = Tuple a (f b)
+
 test :: Effect Unit
 test = do
-  log $ show $ (_ / 2) <$> (Right 10 :: Either Unit _) -- ❶Prints (Right 5).
-  log $ show $ (_ / 2) <$> Left "error reason" -- ❷Prints (Left "error reason")
+  log $ show $ (_ / 2) <$> Tuple 10 20 -- ❶ Prints (Tuple 10 10)
