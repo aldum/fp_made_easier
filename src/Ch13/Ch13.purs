@@ -1,6 +1,9 @@
 module Ch13 where
 
-import Data.Maybe (Maybe(..))
+import Data.Generic.Rep (class Generic)
+import Data.Semigroup ((<>))
+import Data.Show (class Show)
+import Data.Show.Generic (genericShow)
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (Unit, discard, show, ($), (/))
@@ -15,6 +18,12 @@ class Functor f where
   map :: ∀ a b. (a -> b) -> f a -> f b
 
 infixl 4 map as <$>
+
+data Maybe a = Nothing | Just a
+
+derive instance genericMaybe :: Generic (Maybe a) _
+instance showMaybe :: Show a => Show (Maybe a) where
+  show = genericShow
 
 instance mf :: Functor Maybe where
   map _ Nothing = Nothing
