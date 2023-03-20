@@ -9,10 +9,7 @@ import Effect.Console (log)
 import Prelude (Unit, discard, show, ($), (/))
 import Undefined (undefined)
 
-test :: Effect Unit
-test = do
-  log $ show $ (_ / 2) <$> Just 10 -- ❶ Prints (Just 5).
-  log $ show $ (_ / 2) <$> Nothing -- ❷ Prints Nothing.
+-- 13.1
 
 class Functor f where
   map :: ∀ a b. (a -> b) -> f a -> f b
@@ -28,3 +25,24 @@ instance showMaybe :: Show a => Show (Maybe a) where
 instance mf :: Functor Maybe where
   map _ Nothing = Nothing
   map f (Just a) = Just (f a)
+
+-- 13.3
+
+data Either l r = Left l | Right r
+
+derive instance genericEither :: Generic (Either a b) _
+-- instance showEither :: (Show l, Show r) => Show (Either l r) where
+--   show = genericShow
+
+instance showEither :: (Show l, Show r) => Show (Either l r) where
+  show (Left l) = "(Left" <> show l <> ")"
+  show (Right r) = "(Right" <> show r <> ")"
+
+instance ef :: Functor (Either l) where
+  map f (Right v) = Right $ f v
+  map _ (Left e) = Left e
+
+test :: Effect Unit
+test = do
+  log $ show $ (_ / 2) <$> (Right 10 :: Either String Int) -- ❶Prints (Right 5).
+  log $ show $ (_ / 2) <$> Left "error reason" -- ❷Prints (Left "error reason")
